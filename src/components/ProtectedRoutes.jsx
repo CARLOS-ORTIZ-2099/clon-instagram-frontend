@@ -2,30 +2,37 @@
 
 import { Outlet, Navigate } from "react-router-dom"
 import { useAuth } from "../context/AuthProvider"
+import { Navbar } from "./Navbar";
+import { usePublication } from "../context/PublicationProvider";
+import { ModalForPublication } from "./ModalForPublication";
 
 /* con usenavigate hacemos redirecciones programaticas 
-   cons el componente Navigate hacemos redirecciones a nivle de componentes
+   cons el componente Navigate hacemos redirecciones a nivel de componentes
 */
 
 
 export const ProtectedRoutes = () => {
 
-  const {token, loading} = useAuth()
-  console.log(token);
-
-
+  const {user, loading, isAunthenticated} = useAuth()
+  //console.log(user, loading, isAunthenticated);
+  const {active} = usePublication()
+ 
   if(loading){
     return <h1>...cargando</h1>
   }
 
-  if(!token) {
-    return <Navigate to='/login'/>
+  if(!user && !isAunthenticated) {
+    return <Navigate to='/login' replace/>
   }
 
   return (
     <div>
+        <Navbar/>
         <>
           <h2>este contenido es el padre que engloba todo</h2>
+          {
+            active ? <ModalForPublication/>: ''
+          }
           <Outlet/>
         </>
         

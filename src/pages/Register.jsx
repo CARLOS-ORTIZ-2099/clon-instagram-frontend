@@ -1,25 +1,16 @@
 
 import { Link } from "react-router-dom";
 import { useFormFields } from "../hooks/useFormFields";
-import { instance } from "../libs/axiosConfig";
+import { useAuth } from "../context/AuthProvider";
 
 export const Register = () => {
   const {fields, fieldsInputs } = useFormFields() 
+  const {registerHandler} = useAuth()
 
-  
-
-  async function sendData(e) {
-    e.preventDefault()
-    try {
-      const response = await instance.post('/auth/register', fields)
-      console.log(response);
-    }catch(error) {
-      console.log(error);
-    }
-   
-
+  const sendData = (e) => {
+      e.preventDefault()
+      registerHandler(fields)
   }
-
 
   return (
     <div>

@@ -1,32 +1,23 @@
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useAuth } from "../context/AuthProvider"
 import { useNavigate , Link} from "react-router-dom"
 import { useFormFields } from "../hooks/useFormFields"
-import { instance } from "../libs/axiosConfig"
+import { useEffect } from "react"
 
 export const Login = () => {
 
-
   const {fields, fieldsInputs} = useFormFields()
-  const {setToken, setLoading} = useAuth()
+  const {loginHandler, isAunthenticated} = useAuth()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if(isAunthenticated) navigate('/home')
+  }, [isAunthenticated])
 
-  async function sendData(e) {
-    e.preventDefault()
-    try {
-      const {data} = await instance.post('/auth/login', fields,{withCredentials: true})
-      console.log(data);
-      setLoading(false)
-      setToken(data.cookies)
-      navigate('/home')
-    }catch(error) {
-      console.log(error);
-    }
-      
-    
+  const sendData = (e) => {
+      e.preventDefault()
+      loginHandler(fields) 
   }
-
 
   return (
     <div>
