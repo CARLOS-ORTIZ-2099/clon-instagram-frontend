@@ -13,9 +13,9 @@ import { ModalLikes } from "../components/ModalLikes";
 export const Publication = () => {
 
   const {idpublication} = useParams()
-  const {getPublicationHandler, publication, deletePublicationHandler, setEditMode, editMode, created, setCreated} = usePublication()
+  const {getPublicationHandler, publication, deletePublicationHandler, setEditMode, editMode, setPublication} = usePublication()
   const {user} = useAuth()  
-  const {deleteCommentHandler, changeComment, editCommentHandler, createCommentHandler} = useComment() 
+  const {deleteCommentHandler, editCommentHandler, createCommentHandler} = useComment() 
 
   const [comment, setComment] = useState( {content : ''} )  
   const [isEdit, setIsEdit] = useState({editmode : false, id : ''})  
@@ -24,42 +24,13 @@ export const Publication = () => {
   const [publicationId, setPublicationId] = useState(undefined)
 
 
-const changeState = (id)=> {
-    setShowLikes(true)
-    setPublicationId(id)
-}
-
-
-const changeStateEdit = (content, id) => {
-    setIsEdit({...isEdit, editmode : true, id : id})
-    setComment({content})
-}
-
-
-const changeContent = (e) => {
-   
-    setComment((p) => ({...p, [e.target.name] : e.target.value  }))
-
-    if(e.target.value === '' && isEdit) {
-        console.log('entro');
-        setIsEdit({editmode : false, id : ''})
-    }
-        
-}
-
-
- const deleteComent  =  (id) => {
-     deleteCommentHandler(id) 
-}
-
-
 const sendEditOrCreateComment = (e) => {
     e.preventDefault()
     try {
         if(isEdit.editmode) {
-            editCommentHandler(isEdit.id, comment)
+          editCommentHandler(isEdit.id, comment)
         }else {
-            createCommentHandler(idpublication, comment)
+          createCommentHandler(idpublication, comment)
         }
         
     }catch(error) {
@@ -75,20 +46,57 @@ const sendEditOrCreateComment = (e) => {
     getPublicationHandler(idpublication) 
     console.log(publication);
     console.log(user);
-  },[created, changeComment])
+  },[])
 
-  const sendLike = async(id) => {
-    try {
-      const response = await likePublication(id)
-      console.log(response);
-      setCreated(!created)
-    }catch(error) {
-      console.log(error);
-    }
-  }
   
+  // funcion para dar like o deslike  
+    const sendLike = async(id) => {
+      try {
+        const response = await likePublication(id)
+        console.log(response);
+        console.log(publication);
+        if(response.status === 204) {
+          // se borro like, deberiamos borrar el like de nuestro estado publication
+          const updateLikes = publication.likes.filter((like) => like.ownerLike != user.id)
+          setPublication({...publication, likes : updateLikes})
 
+        }else if(response.status === 201) {
+          // se creo el like, deberiamos insertar el like en nuestro estado publications
+          const updateLikes = [...publication.likes, response.data.like]
+          setPublication({...publication, likes : updateLikes})
+        }
+        
+      }catch(error) {
+        console.log(error);
+      }
+  }
+
+  // funcion para ver quienes le dieron like a la publicacion
+  const changeState = (id)=> {
+    setShowLikes(true)
+    setPublicationId(id)
+  }
  
+   // funcion para eliminar un comentario mio
+  const deleteComent = (id) => deleteCommentHandler(id) 
+
+  // funcion para pasar a modo edicion
+  const changeStateEdit = (content, id) => {
+    setIsEdit({...isEdit, editmode : true, id : id})
+    setComment({content})
+  }
+
+  // funcion para corroborar si hay caracteres en la caja de formulario
+  // y cambiar el estado de mi comentario
+  const changeContent = (e) => {
+    setComment((p) => ({...p, [e.target.name] : e.target.value  }))
+    if(e.target.value === '' && isEdit) {
+        console.log('entro');
+        setIsEdit({editmode : false, id : ''})
+    }       
+  }
+
+
   return (
     <>
         <div style={{display : 'flex', flexWrap: 'wrap', gap : '1rem'}}>
@@ -102,11 +110,11 @@ const sendEditOrCreateComment = (e) => {
                              ? `${publication.likes.length} me gusta` 
                             : 'Sé el primero en indicar que te gusta' }
                 </p>
-                        <button onClick={() => sendLike(publication._id)}>
-                          {
-                            publication?.likes?.find(like => like.ownerLike === user.id)?  '❌' : '♥'
-                          } 
-                      </button>
+                    <button onClick={() => sendLike(publication._id)}>
+                      {
+                        publication?.likes?.find(like => like.ownerLike === user.id)?  '❌' : '♥'
+                      } 
+                    </button>
                 <h2>-comentarios-</h2>
                 {
                     publication?.comments?.length > 0 ? (
@@ -118,8 +126,8 @@ const sendEditOrCreateComment = (e) => {
                               {
                                 user.id === comment.ownerComment._id ?(
                                     <>
-                                        <button onClick={() => changeStateEdit(comment.content, comment._id)}>editar</button>
-                                        <button onClick={() => deleteComent(comment._id)}>eliminar</button>
+                                      <button onClick={() => changeStateEdit(comment.content, comment._id)}>editar</button>
+                                      <button onClick={() => deleteComent(comment._id)}>eliminar</button>
                                     </>
                                 ) : (<button>reportar</button>)
                               }
@@ -130,6 +138,7 @@ const sendEditOrCreateComment = (e) => {
                     : 'no hay comentarios'
                 }
                 <br/>
+                {/* botones para editar o eliminar una publicacion que es mia */}
                 {
                     user.id == publication?.ownerPublication?._id && (
                         <>
@@ -158,6 +167,8 @@ const sendEditOrCreateComment = (e) => {
                }
             </form>
 
+
+              {/* formulario para editar una publicacion que es mia */}
         {   
            editMode  && <FormEdit /> 
         }

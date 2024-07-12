@@ -1,22 +1,24 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
 
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext } from "react"
 import { createComment, deletecomment, editComment } from "../api/comment"
+import { usePublication } from "./PublicationProvider"
 
 
 const CommentContext = createContext()
 
 export const CommentProvider = ({children}) => {
 
-  const [changeComment, setChangeComment] = useState(false)
+  const {publication, setPublication} = usePublication()
 
-   const createCommentHandler = async (id, fields) => { 
+  const createCommentHandler = async (id, fields) => { 
     console.log(id, fields);
      try {
-        const response = await createComment(id, fields)
-        console.log(response);
-        setChangeComment(!changeComment)
+        const {data : {comment}} = await createComment(id, fields)
+        console.log(comment);
+        console.log(publication);
+        setPublication((previous) => ( {...previous, comments : [...previous.comments, comment]} ))
      }catch(error) {
         console.log(error);
      }
@@ -27,7 +29,8 @@ export const CommentProvider = ({children}) => {
         console.log(id); 
         const response = await deletecomment(id)
         console.log(response);
-        setChangeComment(!changeComment)
+        const updateComments = publication.comments.filter((comment) => comment._id != id)
+        setPublication({...publication, comments : updateComments})
       }catch(error) {
         console.log(error);
       }
@@ -38,14 +41,17 @@ export const CommentProvider = ({children}) => {
       try{
         const response = await editComment(id, fields) 
         console.log(response);
-        setChangeComment(!changeComment)
+        console.log(publication);
+        const editComments = publication.comments.map((comment) => comment._id === id 
+        ? {...comment, content : fields.content} : comment )
+        setPublication({...publication, comments : editComments})
       }catch(error) {
         console.log(error);
       }
         
   }
 
-  const data = {createCommentHandler, deleteCommentHandler, editCommentHandler, changeComment}
+  const data = {createCommentHandler, deleteCommentHandler, editCommentHandler}
 
   return (
     <CommentContext.Provider value={data}>

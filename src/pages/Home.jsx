@@ -2,9 +2,7 @@
 import { useEffect, useRef, useState } from "react"
 import { usePublication } from "../context/PublicationProvider"
 import { Link } from "react-router-dom"
-import { useComment } from "../context/CommentProvider"
 import { likePublication } from "../api/likePublication"
-import { getPublications } from "../api/publication"
 import { useAuth } from "../context/AuthProvider"
 import { createComment } from "../api/comment"
 import { ModalLikes } from "../components/ModalLikes"
@@ -14,27 +12,19 @@ import { ModalLikes } from "../components/ModalLikes"
 export const Home = () => {  
 
   const {getPublicationsHandler, publications, page, hasMore, pending, setPublications} = usePublication() 
-  //const {createCommentHandler} = useComment()
   const {user} = useAuth()
-  const [buttonsActive, setButtonsActive] = useState([])
+  const [buttonsActive, setButtonsActive] = useState({})
   const refButton = useRef(null)
   const [showLikes, setShowLikes] = useState(false)
   const [publicationId, setPublicationId] = useState(undefined)
 
   useEffect(() => {
-
       const observer = new IntersectionObserver(observerfunction)
       if(observer && refButton.current){
         observer.observe(refButton.current)
       }
-      // funcion de limpieza que se ejecutara cuando el componente se desmonte
-      // y cuando algun elemento de su lista de dependecias cambie, pero cuando
-      // alguno de ellos cambie antes de ejecutar la logica del efecto primero
-      // borra el efecto anterior creando asi un nuevo observador evitando asi 
-      // salidas inesperadas
-      console.log(publications);
-      return () => { 
-        
+      //console.log(publications);
+      return () => {    
         if(observer) {
           observer.disconnect()
         }
@@ -42,20 +32,14 @@ export const Home = () => {
   }, [publications, pending]) 
 
   async function observerfunction(entries) {
-    console.log(entries[0]);
-    const firstEntry = entries[0]
+      //console.log(entries[0]);
+      const firstEntry = entries[0]
       if(!pending) {
-        console.log('falso');
+        //console.log('falso');
       }
       if(pending){
-        console.log('verdad');
+        //console.log('verdad');
       } 
-      /* aqui lo que hacemos es ejecutar la funcion que se encargara de comunicarse 
-         con el servidor siempre y cuando no halla una tarea pendiente
-         esto lo hago con el fin de que aunque la ventana del navegador se interseque
-         con mi elemento objetivo no hacer una llamada a mi servidor indiscriminadamente
-         si hay una tarea pendiente, cuando la ejecucion anterior se complete podemos hacer una nueva peticion
-      */
       if((firstEntry.isIntersecting && hasMore && !pending) ) {
        await getPublicationsHandler(page)
        
@@ -65,21 +49,30 @@ export const Home = () => {
 
 
   const handlerComment = ({target}) => {
-      const foundId = buttonsActive.find((el) => el === target.id)
-      !foundId &&  target.value.trim().length > 0 ? setButtonsActive((p) => [...p, target.id])  :''  
-      foundId &&  target.value.trim().length < 1 ? setButtonsActive(buttonsActive.filter(el => el !== foundId)) : ''
-      
+      if( !buttonsActive[target.id] && target.value.trim().length > 0 ) {
+        setButtonsActive({...buttonsActive, [target.id] : target.id})
+      }
 
+      else if(buttonsActive[target.id] && target.value.trim().length < 1) {
+        const copy = {...buttonsActive}
+        delete copy[target.id]
+        setButtonsActive(copy)
+      }
   }
 
   const sendComment = async (e, id) => {
         e.preventDefault()
         try{
-          await createComment(id, {content : e.target.content.value}) 
-          setButtonsActive(buttonsActive.filter(btn => btn !== id))
-          const publicationsUpdates = await getPublications(1, publications.length)  
-          console.log(publicationsUpdates);
-          setPublications(publicationsUpdates.data.response) 
+          const {data : {comment}} = await createComment(id, {content : e.target.content.value}) 
+          console.log(comment);
+          const copy = {...buttonsActive}
+          delete copy[id]
+          setButtonsActive(copy)
+          console.log(publications);
+          const updateComment = publications.map((publication) => publication._id === id ? 
+                {...publication, comments : [...publication.comments, comment]} 
+                : publication)
+          setPublications(updateComment)
           e.target.reset()
         }catch(error) {
           console.log(error);
@@ -87,14 +80,23 @@ export const Home = () => {
   }
 
 
-   const sendLike = async(id) => {
+  const sendLike = async(id) => {
       try {
         const response = await likePublication(id)
         console.log(response);
-        const publicationsUpdates = await getPublications(1, publications.length)  
-        console.log(publicationsUpdates);
-        console.log(page);
-        setPublications(publicationsUpdates.data.response) 
+        console.log(publications);
+        if(response.status === 204) {
+          // se borro like, deberiamos borrar el like de nuestro estado publications
+          const updateLikes = publications.map((publication) => publication._id === id ? 
+          {...publication, likes : publication.likes.filter(like => like.ownerLike != user.id) } : publication )
+          setPublications(updateLikes)
+
+        }else if(response.status === 201) {
+          // se creo el like, deberiamos insertar el like en nuestro estado publications
+          const updateLikes = publications.map((publication) => publication._id === id ? 
+          {...publication, likes : [...publication.likes, response.data.like]} : publication)
+          setPublications(updateLikes)
+        }
         
       }catch(error) {
         console.log(error);
@@ -141,8 +143,8 @@ export const Home = () => {
 
                          </textarea>
                         {
-                            buttonsActive.includes(publication._id) ?
-                           <input  type="submit" value='publicar'/> :''
+                            buttonsActive[publication._id] &&
+                           <input  type="submit" value='publicar'/> 
                            
                          } 
                       
@@ -168,4 +170,3 @@ export const Home = () => {
    funcion de limpieza limpiara el efecto anterior, antes de ejecutar la
    logica nueva
 */
-

@@ -13,7 +13,7 @@ export const PublicationContext = createContext()
 export const PublicationProvider = ({children}) => {
 
   const [active, setActive] = useState(false)  // estado para activar el formulario de crear
-  const [created, setCreated] = useState(false) // estado para verificar si se creo algo 
+  //const [created, setCreated] = useState(false) // estado para verificar si se creo algo 
   const [publication, setPublication] = useState({})// estado para ver la informacion de la publicacion
   const [editMode, setEditMode] = useState(false)// si esta en modo edicion
 
@@ -31,14 +31,20 @@ export const PublicationProvider = ({children}) => {
 
   const createPublicationHandler = async (e, fields) => {
     e.preventDefault()
+    if(!fields.file) {
+        return alert('el archivo es obligatorio')
+    }
     const formData = new FormData()
     console.log(fields);
     formData.append('file', fields.file )
     formData.append('content', fields.content)
     try {
-        const response = await createPublication(!fields.file ? fields : formData)
+        const response = await createPublication(formData)
         console.log(response);
-        setCreated(!created)
+        console.log(publications);
+        setPublications([...publications, response.data.publicationCreated])
+      /*   setCreated(!created) */
+      
         setActive(false)
     }catch(error) {
         console.log(error);
@@ -68,7 +74,7 @@ export const PublicationProvider = ({children}) => {
     try {
       const response = await editPublication(id, !fields.file ? fields : formData)
       console.log(response);
-      setCreated(!created)
+    /*   setCreated(!created) */
       setEditMode(false)
     }catch(error) {
       console.log(error);
@@ -110,7 +116,7 @@ export const PublicationProvider = ({children}) => {
 
 
 
-  const data = {active, changeActive, createPublicationHandler, created, setCreated, deletePublicationHandler, editPublicationHandler, getPublicationHandler, publication, editMode, setEditMode, getPublicationsHandler, publications, page, hasMore, pending, setPending, setPublications}
+  const data = {active, changeActive, createPublicationHandler,/*  created, */ /* setCreated, */ deletePublicationHandler, editPublicationHandler, getPublicationHandler, publication, editMode, setEditMode, getPublicationsHandler, publications, page, hasMore, pending, setPending, setPublications, setPublication}
 
   return (
     <PublicationContext.Provider value={data}>
