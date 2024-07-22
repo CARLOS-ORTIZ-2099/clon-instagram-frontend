@@ -1,29 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
-import { usePublication } from "../context/PublicationProvider";
 import { Link, useParams } from "react-router-dom";
 import {createfollower, unFollowUser } from "../api/follower";
+import { profileUser } from "../api/auth";
 
 
 export const Profile = () => {
-  const { user, profilehandler, infoUser  } = useAuth()   
-  const {created} = usePublication()
+  const { user } = useAuth()   
   const {username} = useParams()
-  const [followUnFollow, setFollowUnFollow] = useState(false)
+  const [infoUser, setInfoUser] = useState(false)
+
+  const profilehandler = async () => {
+    const {data : {user}} = await profileUser(username)
+    setInfoUser(user)
+  }
 
   useEffect(() =>{
-    profilehandler(username) 
+    profilehandler() 
     console.log(infoUser);
     console.log(user);
-  }, [created, followUnFollow])
+  }, [username])
 
 
   const followerHandler = async(id) => {
     try {
       const response = await createfollower(id)
       console.log(response);
-      setFollowUnFollow(!followUnFollow)
+      const updateFollewers = [...infoUser.followers, response.data.seguidor._id]
+      setInfoUser({...infoUser, followers : updateFollewers})
     }catch(error) {
       console.log(error);
     }
@@ -33,7 +38,9 @@ export const Profile = () => {
       try{
         const response = await unFollowUser(id)
         console.log(response);
-        setFollowUnFollow(!followUnFollow)
+        const updateFollewers = infoUser.followers.filter((follower) => follower !== response.data.user._id)
+        setInfoUser({...infoUser, followers : updateFollewers})
+
       }catch(error) {
         console.log(error);
       }
@@ -57,7 +64,7 @@ export const Profile = () => {
        <br/>
        {
         infoUser._id != user.id && ( 
-          infoUser.followers.find(follow =>  follow._id === user.id) ? 
+          infoUser.followers.find(follow =>  follow === user.id) ? 
           <button onClick={() => deleteFollowerHandler(infoUser._id)}>dejar de seguir </button>  
           : <button onClick={() => followerHandler(infoUser._id)}>seguir</button>
         )

@@ -13,13 +13,13 @@ import { ModalLikes } from "../components/ModalLikes";
 export const Publication = () => {
 
   const {idpublication} = useParams()
-  const {getPublicationHandler, publication, deletePublicationHandler, setEditMode, editMode, setPublication} = usePublication()
+  const {getPublicationHandler, publication, setPublication,deletePublicationHandler, setPublications, publications} = usePublication()
   const {user} = useAuth()  
   const {deleteCommentHandler, editCommentHandler, createCommentHandler} = useComment() 
 
   const [comment, setComment] = useState( {content : ''} )  
   const [isEdit, setIsEdit] = useState({editmode : false, id : ''})  
-
+  const [isEditPublication, setIsEditPublication] = useState(false)
   const [showLikes, setShowLikes] = useState(false)
   const [publicationId, setPublicationId] = useState(undefined)
 
@@ -53,17 +53,34 @@ const sendEditOrCreateComment = (e) => {
     const sendLike = async(id) => {
       try {
         const response = await likePublication(id)
-        console.log(response);
+      /*   console.log(response);
         console.log(publication);
+        console.log(publications);
+        console.log(id); */
+
         if(response.status === 204) {
           // se borro like, deberiamos borrar el like de nuestro estado publication
           const updateLikes = publication.likes.filter((like) => like.ownerLike != user.id)
           setPublication({...publication, likes : updateLikes})
+          // tambien debo modificar mi estado de publicaciones oara que este se actualize en el home con las cantidad de likes mas recientes
+
+          const publicationUpdate = publications.map((pb) => pb._id === id 
+          ? {...pb, likes : pb.likes.filter((like) => like.ownerLike != user.id)} 
+          : pb
+          )
+          setPublications(publicationUpdate)
+
 
         }else if(response.status === 201) {
           // se creo el like, deberiamos insertar el like en nuestro estado publications
           const updateLikes = [...publication.likes, response.data.like]
           setPublication({...publication, likes : updateLikes})
+
+          const publicationUpdate = publications.map((pb) => pb._id === id 
+          ? {...pb, likes : [...pb.likes, response.data.like]} 
+          : pb
+          )
+          setPublications(publicationUpdate)
         }
         
       }catch(error) {
@@ -80,7 +97,7 @@ const sendEditOrCreateComment = (e) => {
    // funcion para eliminar un comentario mio
   const deleteComent = (id) => deleteCommentHandler(id) 
 
-  // funcion para pasar a modo edicion
+  // funcion para pasar a modo edicion de comentario
   const changeStateEdit = (content, id) => {
     setIsEdit({...isEdit, editmode : true, id : id})
     setComment({content})
@@ -143,7 +160,7 @@ const sendEditOrCreateComment = (e) => {
                     user.id == publication?.ownerPublication?._id && (
                         <>
                              <button onClick={() => deletePublicationHandler(publication._id)}>eliminar</button>
-                             <button onClick={() => setEditMode(true)}>editar</button> 
+                             <button onClick={() => setIsEditPublication(true)}>editar</button> 
                         </>
                     )
                 }
@@ -170,7 +187,7 @@ const sendEditOrCreateComment = (e) => {
 
               {/* formulario para editar una publicacion que es mia */}
         {   
-           editMode  && <FormEdit /> 
+           isEditPublication  && <FormEdit setIsEditPublication = {setIsEditPublication}/> 
         }
 
       {

@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthProvider";
 
 export const ModalFollowers = () => {
 
-  const {username, id} = useParams()  
+  const {id} = useParams()  
   const [loading, setLoading] = useState(false)
   const [followers, setFollowers] = useState([])
   const {user} = useAuth()
@@ -20,9 +20,9 @@ export const ModalFollowers = () => {
     const petitionFollowers = async() => {
         setLoading(true)
         try{
-            const response = await getFollowers(id)
-            console.log(response);
-            setFollowers(response.data)
+            const {data} = await getFollowers(id)
+            console.log(data);
+            setFollowers(data)
             setLoading(false)  
         }catch(error){
             console.log(error);

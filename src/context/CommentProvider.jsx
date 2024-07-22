@@ -10,31 +10,50 @@ const CommentContext = createContext()
 
 export const CommentProvider = ({children}) => {
 
-  const {publication, setPublication} = usePublication()
+  const {publication, setPublication, publications, setPublications} = usePublication()
+
+
+
+  const deleteCommentHandler = async (id) => {
+    try{
+      console.log(id); 
+      const response = await deletecomment(id)
+      console.log(response);
+      const updateComments = publication.comments.filter((comment) => comment._id != id)
+      setPublication({...publication, comments : updateComments})
+
+      const publicationUpdate  = publications.map((pb) => pb._id === publication._id ?
+        {...pb, comments : pb.comments.filter((comment) => comment._id !== id)} : pb
+      )
+      setPublications(publicationUpdate)
+
+    }catch(error) {
+      console.log(error);
+    }
+  }
+
 
   const createCommentHandler = async (id, fields) => { 
     console.log(id, fields);
      try {
         const {data : {comment}} = await createComment(id, fields)
         console.log(comment);
-        console.log(publication);
+        //console.log(publication);
+        console.log(publications);
+        
         setPublication((previous) => ( {...previous, comments : [...previous.comments, comment]} ))
+
+        const publicationUpdate = publications.map((pb) => pb._id === id 
+        ? {...pb, comments : [...pb.comments, comment ]} : pb 
+        )
+        setPublications(publicationUpdate)
+
      }catch(error) {
         console.log(error);
      }
   }  
 
-  const deleteCommentHandler = async (id) => {
-      try{
-        console.log(id); 
-        const response = await deletecomment(id)
-        console.log(response);
-        const updateComments = publication.comments.filter((comment) => comment._id != id)
-        setPublication({...publication, comments : updateComments})
-      }catch(error) {
-        console.log(error);
-      }
-  }
+  
  
 
   const editCommentHandler = async (id, fields) => {

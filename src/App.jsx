@@ -1,5 +1,5 @@
-import './App.css'
-
+/* import './App.css'
+ */
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import { Register } from './pages/Register'
 import { Login } from './pages/Login'
@@ -14,6 +14,7 @@ import { Publication } from './pages/Publication'
 import { CommentProvider } from './context/CommentProvider'
 import { ModalFollowers } from './components/ModalFollowers'
 import { ModalFolloweds } from './components/ModalFolloweds'
+import { Explore } from './components/Explore'
 
 
 function App() {
@@ -22,7 +23,6 @@ function App() {
   return (
     <>
         <BrowserRouter>
-        
         <AuthProvider>
             <PublicationProvider>
               <CommentProvider>
@@ -34,12 +34,13 @@ function App() {
 
                 {/* esta tiene que ser una ruta protegida */}
                 <Route element={<ProtectedRoutes/>}>
-              
+
                   <Route path='/home' element={<Home/>}/>
                   <Route path='/:username' element={<Profile/>}/>
                   <Route path='/:username/:id/followers' element={<ModalFollowers/>}/>
                   <Route path='/:username/:id/following' element={<ModalFolloweds/>}/>
                   <Route path='/p/:idpublication' element={<Publication/>}/>
+                  <Route path='/explore' element={<Explore/>}/>
 
                 </Route>
 
@@ -53,5 +54,6 @@ function App() {
     </>
   )
 }
+
 
 export default App

@@ -11,7 +11,7 @@ import { ModalLikes } from "../components/ModalLikes"
 
 export const Home = () => {  
 
-  const {getPublicationsHandler, publications, page, hasMore, pending, setPublications} = usePublication() 
+  const {getPublicationsHandler, publications, hasMore, pending, setPublications} = usePublication() 
   const {user} = useAuth()
   const [buttonsActive, setButtonsActive] = useState({})
   const refButton = useRef(null)
@@ -23,16 +23,17 @@ export const Home = () => {
       if(observer && refButton.current){
         observer.observe(refButton.current)
       }
-      //console.log(publications);
+      //console.log('publications');
       return () => {    
         if(observer) {
-          observer.disconnect()
+          observer.disconnect()  
         }
       }
-  }, [publications, pending]) 
+     
+  }, [publications, pending])   
 
   async function observerfunction(entries) {
-      //console.log(entries[0]);
+      console.log(entries[0]);
       const firstEntry = entries[0]
       if(!pending) {
         //console.log('falso');
@@ -41,7 +42,7 @@ export const Home = () => {
         //console.log('verdad');
       } 
       if((firstEntry.isIntersecting && hasMore && !pending) ) {
-       await getPublicationsHandler(page)
+       await getPublicationsHandler(publications.length)
        
       }
 
@@ -63,7 +64,7 @@ export const Home = () => {
   const sendComment = async (e, id) => {
         e.preventDefault()
         try{
-          const {data : {comment}} = await createComment(id, {content : e.target.content.value}) 
+          const {data : {comment}} = await createComment(id, {content : e.target.content.value})  
           console.log(comment);
           const copy = {...buttonsActive}
           delete copy[id]

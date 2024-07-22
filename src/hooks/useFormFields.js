@@ -1,9 +1,9 @@
 import { useState } from "react"
 
 
-export const useFormFields = () => {
+export const useFormFields = (data) => {
 
-    const [fields, setFields]  = useState({})
+    const [fields, setFields]  = useState(data || {})
 
     const fieldsInputs = ({target}) => {
         console.log(fields);

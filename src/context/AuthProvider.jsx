@@ -3,7 +3,7 @@
 
 import Cookies from "js-cookie"
 import { createContext, useContext, useEffect, useState } from "react"
-import { loginUser, logoutUser, profileUser, registerUser, verifyToken } from "../api/auth"
+import { loginUser, logoutUser, registerUser, verifyToken } from "../api/auth"
 import { useNavigate } from "react-router-dom"
 
 
@@ -15,7 +15,7 @@ export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(false) 
   const [loading, setLoading] = useState(true)
   const [isAunthenticated, setIsAunthenticated] = useState(false)
-  const [infoUser, setInfoUser] = useState(false)
+ /*  const [infoUser, setInfoUser] = useState(false) */
 
   const navigate = useNavigate()
   
@@ -83,22 +83,17 @@ export const AuthProvider = ({children}) => {
         if(response.statusText === 'OK') {
           setUser(false)
           setIsAunthenticated(false)
-          setInfoUser(false)
+          /* setInfoUser(false) */
         }
       }catch(error) {
         console.log(error); 
       }
   }
 
-  const profilehandler = async (username) => {
-    const {data : {user}} = await profileUser(username)
-    setInfoUser(user)
-  }
 
   const data = {setUser, user, loading, setLoading, 
               isAunthenticated, setIsAunthenticated,
               registerHandler, loginHandler, logoutHandler,
-              profilehandler, infoUser
   }
 
   return (

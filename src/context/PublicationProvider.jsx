@@ -12,25 +12,19 @@ export const PublicationContext = createContext()
 
 export const PublicationProvider = ({children}) => {
 
-  const [active, setActive] = useState(false)  // estado para activar el formulario de crear
-  //const [created, setCreated] = useState(false) // estado para verificar si se creo algo 
-  const [publication, setPublication] = useState({})// estado para ver la informacion de la publicacion
-  const [editMode, setEditMode] = useState(false)// si esta en modo edicion
+  const [publication, setPublication] = useState({})// estado para ver la informacion de una publicacion en especifico
 
   // estados para la paginacion de las publicaciones.
   const [publications, setPublications] = useState([])
-  const [page, setPage] = useState(1)
+
   const [hasMore, setHasMore] = useState(true)
   const [pending, setPending] = useState(false)
 
   const {user} = useAuth()
-
   const navigate = useNavigate()
+  
 
-  const changeActive = () => setActive(!active) 
-
-  const createPublicationHandler = async (e, fields) => {
-    e.preventDefault()
+  const createPublicationHandler = async (fields) => {
     if(!fields.file) {
         return alert('el archivo es obligatorio')
     }
@@ -42,22 +36,44 @@ export const PublicationProvider = ({children}) => {
         const response = await createPublication(formData)
         console.log(response);
         console.log(publications);
-        setPublications([...publications, response.data.publicationCreated])
-      /*   setCreated(!created) */
+        if(!hasMore) {
+          setPublications([...publications, response.data.publicationCreated])
+        }
       
-        setActive(false)
+        /* setActive(false) */
     }catch(error) {
         console.log(error);
     }
   }
  
+  const getPublicationsHandler = async (skip) => { 
+    setPending(true)
+    try {  
+     const response = await getPublications(skip) 
+     console.log(response);
+     if(response.data.response.length === 0) {
+      setHasMore(false)
+     }else {
+      setTimeout(() => {
+        setPublications((previous) => [...previous, ...response.data.response]) 
+        /* setPage((previous) => previous+1) */
+        setPending(false)
+      }, 2000)
+     }
+     
+    }catch(error) {
+      console.log(error);
+    }
+  }
 
-  const deletePublicationHandler = async (id) => {
+  const deletePublicationHandler = async (id) => { 
     try{
-        const response = await deletePublication(id)
-        console.log(response);
-        //setCreated(!created)
-        navigate(`/${user.username}`) 
+        const {data : {publicationDeleted}} = await deletePublication(id)  
+        console.log(publicationDeleted);
+        console.log(publications);
+        const publicationsUpdate = publications.filter((publication) => publication._id !== publicationDeleted._id)
+        setPublications(publicationsUpdate) 
+        navigate(`/${user.username}`)  
     }catch(error) {
       console.log(error);
     }
@@ -65,17 +81,28 @@ export const PublicationProvider = ({children}) => {
   }
 
 
-  const editPublicationHandler = async (e, id, fields) => {   
-    e.preventDefault()
-    const formData = new FormData()
-    console.log(fields);
-    formData.append('file', fields.file )
-    formData.append('content', fields.content || publication.content)
+
+
+  const editPublicationHandler = async (id, fields) => {   
+    let formData 
+    if(!fields.file) {
+        formData = fields
+    } else {
+      formData = new FormData()
+      formData.append('file', fields.file )
+      formData.append('content', fields.content || publication.content)
+    }
     try {
-      const response = await editPublication(id, !fields.file ? fields : formData)
-      console.log(response);
-    /*   setCreated(!created) */
-      setEditMode(false)
+      const {data} = await editPublication(id, formData)
+      setPublication({...publication, content : fields.content || publication.content,
+        file :  data?.file?.filename ? `/uploads/${data?.file?.filename}` : publication.file }
+      )
+      const modifyPublication = publications.map((p) => p._id === publication._id 
+        ? {...p, content : fields.content || publication.content, 
+          file :  data?.file?.filename ? `/uploads/${data?.file?.filename}` : publication.file
+         } : p
+      )
+      setPublications(modifyPublication)
     }catch(error) {
       console.log(error);
     }
@@ -94,29 +121,11 @@ export const PublicationProvider = ({children}) => {
   }
  
  
-  const getPublicationsHandler = async (page) => { 
-    setPending(true)
-    try {  
-     const response = await getPublications(page) 
-     console.log(response);
-     if(response.data.response.length === 0) {
-      setHasMore(false)
-     }else {
-      setTimeout(() => {
-        setPublications((previous) => [...previous, ...response.data.response]) 
-        setPage((previous) => previous+1)
-        setPending(false)
-      }, 2000)
-     }
-     
-    }catch(error) {
-      console.log(error);
-    }
-  }
 
 
 
-  const data = {active, changeActive, createPublicationHandler,/*  created, */ /* setCreated, */ deletePublicationHandler, editPublicationHandler, getPublicationHandler, publication, editMode, setEditMode, getPublicationsHandler, publications, page, hasMore, pending, setPending, setPublications, setPublication}
+
+  const data = {createPublicationHandler, deletePublicationHandler, editPublicationHandler, getPublicationHandler, getPublicationsHandler, publication, setPublication, publications, setPublications, pending, setPending, hasMore}
 
   return (
     <PublicationContext.Provider value={data}>

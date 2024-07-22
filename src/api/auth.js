@@ -11,6 +11,14 @@ export const logoutUser = () => instance.get('/auth/logout')
 
 export const profileUser = (username) => instance.get('/auth/profile/'+username)
 
+export const searchUser = (username) => instance.get('/auth/user-search?username='+username)
+
+
+
+
+
+
+
 /* function promise (num) {
     return new Promise((resolve, reject) => {
         if(num % 2 === 0) {
