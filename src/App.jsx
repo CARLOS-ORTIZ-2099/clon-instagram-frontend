@@ -1,8 +1,7 @@
-/* import './App.css'
- */
+
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import { Register } from './pages/Register'
-import { Login } from './pages/Login'
+import { Register } from './pages/register/Register'
+import { Login } from './pages/login/Login'
 import { Home } from './pages/Home'
 import { ProtectedRoutes } from './components/ProtectedRoutes'
 import { Profile } from './pages/Profile'
