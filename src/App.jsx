@@ -2,7 +2,7 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import { Register } from './pages/register/Register'
 import { Login } from './pages/login/Login'
-import { Home } from './pages/Home'
+import { Home } from './pages/home/Home'
 import { ProtectedRoutes } from './components/ProtectedRoutes'
 import { Profile } from './pages/Profile'
 import { NotFound } from './pages/NotFound'
@@ -14,6 +14,7 @@ import { CommentProvider } from './context/CommentProvider'
 import { ModalFollowers } from './components/ModalFollowers'
 import { ModalFolloweds } from './components/ModalFolloweds'
 import { Explore } from './components/Explore'
+
 
 
 function App() {
@@ -31,7 +32,7 @@ function App() {
                   <Route path='/login' element={<Login/>}/>
                 </Route>
 
-                {/* esta tiene que ser una ruta protegida */}
+                {/* esta tiene que ser una ruta protegida */} 
                 <Route element={<ProtectedRoutes/>}>
 
                   <Route path='/home' element={<Home/>}/>
