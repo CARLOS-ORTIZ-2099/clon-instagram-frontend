@@ -24,7 +24,7 @@ export const UserSearch = () => {
       }
   }
 
-  return (
+  return ( 
     <div style={{border : 'solid blue 3px'}}> 
             <h1>UserSearch</h1> 
 

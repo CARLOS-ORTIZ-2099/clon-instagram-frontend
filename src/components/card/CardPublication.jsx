@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Card, CardHeader, CardBody, CardFooter, Stack, Heading, Button, Image, Text, Flex, Avatar, Box, IconButton, Textarea, useDisclosure } from '@chakra-ui/react'
+import { Card, CardHeader, CardBody, CardFooter, Heading, Button, Image, Text, Flex, Avatar, Box, IconButton, Input } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthProvider'
@@ -8,7 +8,6 @@ import { likePublication } from '../../api/likePublication'
 import { createComment } from '../../api/comment'
 
 
- 
  
 export const CardPublication = ({publication, onOpen, setIdPublication}) => {
 
@@ -78,7 +77,6 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
     }
 
     
-
   return (
     <Card border={'solid blue 1px'} maxW='md'>
 
@@ -148,10 +146,10 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
               </Link> 
             }
             </Box>
-
+ 
             <form  onSubmit={(e) => sendComment(e, publication._id)}>
               <Box display={'flex'} >
-                <Textarea  minHeight={''} id={publication._id}  placeholder="agregar un comentario" onChange={handlerComment} name="content"  />
+                <Input variant='flushed' id={publication._id}  placeholder="agregar un comentario" onChange={handlerComment} name="content"  />
                   {
                     buttonsActive[publication._id] &&
                     <Button type='submit' color={'blue'} bg={'none'} >

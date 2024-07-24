@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import './modal-likes.css'
 import { getLikePublication } from '../api/likePublication'
 import { Link } from 'react-router-dom'
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
+import { Avatar, Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 
 export const ModalLikes = ({isOpen, onClose, idPublication}) => {
 
@@ -33,9 +33,9 @@ export const ModalLikes = ({isOpen, onClose, idPublication}) => {
 
   return (
     <>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+      <Modal isCentered closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent >
           <ModalHeader textAlign={'center'} borderBottom={'solid black 1px'}>Me gusta</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -44,10 +44,20 @@ export const ModalLikes = ({isOpen, onClose, idPublication}) => {
                   <ul>
                     {
                       likes.map(like => (
-                        <Text key={like._id}>
-                            <span>{like.ownerLike.fullname}</span> 
-                            <Link style={{color : 'aliceblue'}} to={`/${like.ownerLike.username}`}>----{like.ownerLike.username}</Link>
-                        </Text>
+                        <Box key={like._id} display={'flex'} marginTop={2}>
+                            <Box marginRight={2}>
+                              <Link to={`/${like.ownerLike.username}`}>
+                              <Avatar name={`${like.ownerLike.fullname}`}  /> 
+                              </Link>
+                               
+                            </Box>
+                            <Box>
+                              <Text fontWeight={'bold'}>
+                                <Link  to={`/${like.ownerLike.username}`}>{like.ownerLike.username}</Link>
+                              </Text>                             
+                                <Text>{like.ownerLike.fullname}</Text>
+                            </Box>      
+                        </Box>
                       ))
                     }
                   </ul>

@@ -53,14 +53,12 @@ export const Home = () => {
               publication = {publication}
               onOpen = {onOpen}
               setIdPublication={setIdPublication}
-              /* setShowLikes = {setShowLikes} */
             />
         ))
       }
       { 
         hasMore && <button ref={refButton}>cargando...</button> 
       } 
-
       {
         isOpen && <ModalLikes isOpen = {isOpen} onClose={onClose} idPublication={idPublication} />
       }
