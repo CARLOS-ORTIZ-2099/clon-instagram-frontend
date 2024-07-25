@@ -3,7 +3,7 @@
 import { Sidebar } from "../components/sidebar/Sidebar"
 import { ModalForPublication } from "../components/ModalForPublication"
 import { Outlet, useLocation } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 import styles from './gridLayout.module.css'
 import { useDisclosure } from "@chakra-ui/react"
@@ -15,15 +15,7 @@ export const GridLayout = () => {
    const location = useLocation() 
 
 
-/*   // modal  para crear una nueva publicacion  
-  const [activateModal, setActivateModal] = useState(false)
-
-  // funcion para activar el modal de la publicacion 
-  const changeActive = () => setActivateModal(!activateModal) */
- 
-
-
-  useEffect(() => {
+  useEffect(() => { 
     onClose()
   }, [location])  
 
@@ -40,9 +32,6 @@ export const GridLayout = () => {
         {
           isPublicationOpen && <ModalForPublication isPublicationOpen = {isPublicationOpen} onPublicationClose={onPublicationClose}/>
         }
-        {/* {
-          activateModal && <ModalForPublication changeActive = {changeActive}/>
-        } */}
           <Outlet/>
     </div>
   )

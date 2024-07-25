@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthProvider";
 import { Link, useParams } from "react-router-dom";
 import {createfollower, unFollowUser } from "../api/follower";
 import { profileUser } from "../api/auth";
+import styles from './profile/profile.module.css'
+import { Avatar } from "@chakra-ui/react";
 
 
 export const Profile = () => {
@@ -18,8 +20,8 @@ export const Profile = () => {
 
   useEffect(() =>{
     profilehandler() 
-    console.log(infoUser);
-    console.log(user);
+    /* console.log(infoUser);
+    console.log(user); */
   }, [username])
 
 
@@ -55,35 +57,66 @@ export const Profile = () => {
 
   return (
     <div>
-       <h2> welcome {infoUser.username}</h2>
-       <h3>{infoUser.fullname}</h3>
-       <h3>{infoUser.email}</h3>
-       <span> {infoUser?.publications.length} publicaciones - </span> 
-       <Link to={`/${infoUser.username}/${infoUser._id}/followers`}> {infoUser?.followers.length} seguidores-</Link>
-       <Link to={`/${infoUser.username}/${infoUser._id}/following`}> {infoUser?.followeds.length} seguidos</Link>
-       <br/>
-       {
-        infoUser._id != user.id && ( 
-          infoUser.followers.find(follow =>  follow === user.id) ? 
-          <button onClick={() => deleteFollowerHandler(infoUser._id)}>dejar de seguir </button>  
-          : <button onClick={() => followerHandler(infoUser._id)}>seguir</button>
-        )
-          
-       }
-      
-       <div style={{display: 'flex', flexWrap:'wrap', gap:'1rem'}}>
-        {
-          infoUser?.publications.length > 0 ? (
-              infoUser.publications.map((publication) => {
-              return <div key={publication._id}>
-                  <img style={{width : '250px'}} src={'http://localhost:3000'+publication.file} alt="" />
-                  <br/>
-                <Link to={'/p/'+publication._id}>see more</Link>
+
+      <div className={styles.contenedorInfouser}>
+          <div className={styles.child1}>
+            <Avatar name={infoUser.username} size={ {base : 'xl', md : '2xl'} } /> 
+          </div>
+
+          <div className={styles.child2}>
+              <div>
+                <h2> welcome {infoUser.username}</h2>
+                <button>editar perfil</button>
               </div>
-              })
-          ) : (<h4>sin publicaciones</h4>)
-        }
-       </div>
+
+              <div>
+                  <span> {infoUser?.publications.length} publicaciones - </span> 
+                  <Link to={`/${infoUser.username}/${infoUser._id}/followers`}> {infoUser?.followers.length} seguidores-</Link>
+                  <Link to={`/${infoUser.username}/${infoUser._id}/following`}> {infoUser?.followeds.length} seguidos</Link>
+                  {
+                    infoUser._id != user.id && ( 
+                      infoUser.followers.find(follow =>  follow === user.id) ? 
+                      <button onClick={() => deleteFollowerHandler(infoUser._id)}>dejar de seguir </button>  
+                      : <button onClick={() => followerHandler(infoUser._id)}>seguir</button>
+                    )
+                
+                  }
+              </div>
+              <div>
+                 <h3>{infoUser.fullname}</h3>
+                 <h2>sin descripcion</h2>
+              </div>
+          </div>
+
+            
+      </div>
+
+      <div className={styles.contenedorImagenes}>
+        {
+             infoUser?.publications.length > 0 ?
+              (
+                infoUser.publications.map((publication) => (
+                  
+                    <Link to={'/p/'+publication._id} key={publication._id} className={styles.imagen}>
+                      <img className={styles.img} src={'http://localhost:3000'+publication.file} alt="" />
+                        <div className={styles.overlay}>
+                            <span><i className="bi bi-heart-fill"></i> {publication.likes.length}</span>
+                            <span><i className="bi bi-chat-fill"></i> {publication.comments.length}</span>
+                        </div>
+                    </Link>
+                        
+                    ))
+                ) 
+                : (
+                    <h3>
+                        no hay nada para mostrar
+                    </h3>
+                )
+        } 
+      </div>
+
+       
+      
     </div>
   )
 }

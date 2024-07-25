@@ -25,7 +25,7 @@ export const Sidebar = ({/* changeActive, */ onOpen, onPublicationOpen}) => {
                 <i className={`bi bi-search ${styles.sizeIcons}`}></i> 
                 <span className={styles.text}> buscar</span>
             </li>
-            {/* {
+            {/* { 
                 activateSearch && <UserSearch/>
             } */}
             <li>

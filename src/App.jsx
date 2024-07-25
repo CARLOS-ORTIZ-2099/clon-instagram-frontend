@@ -13,7 +13,7 @@ import { Publication } from './pages/Publication'
 import { CommentProvider } from './context/CommentProvider'
 import { ModalFollowers } from './components/ModalFollowers'
 import { ModalFolloweds } from './components/ModalFolloweds'
-import { Explore } from './components/Explore'
+import { Explore } from './pages/explore/Explore'
 
 
 
