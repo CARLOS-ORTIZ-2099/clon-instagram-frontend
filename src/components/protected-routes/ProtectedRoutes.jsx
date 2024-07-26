@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { Navigate } from "react-router-dom"
-import { useAuth } from "../context/AuthProvider"
 import { ChakraProvider} from "@chakra-ui/react";
-import { GridLayout } from "../layout/GridLayout";
+import { GridLayout } from "../../layout/GridLayout";
+import { useAuth } from "../../context/AuthProvider";
 
 
 

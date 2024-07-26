@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthProvider"
-import { UserSearch } from "../UserSearch"
 
 import styles from './sidebar.module.css'
 import img from '../../assets/images/instagramLogo2.png'

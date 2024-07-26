@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react"
 import { usePublication } from "../../context/PublicationProvider"
-import { ModalLikes } from "../../components/ModalLikes"
-import { CardPublication } from "../../components/card/CardPublication"
+import { ModalLikes } from "../../components/modal-likes/ModalLikes"
+import { CardPublication } from "../../components/card-publication/CardPublication"
 import styles from './home.module.css'
 import { useDisclosure } from "@chakra-ui/react"
 

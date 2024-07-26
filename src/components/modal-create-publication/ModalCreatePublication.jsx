@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { Box, Button, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Textarea } from "@chakra-ui/react"
-import { usePublication } from "../context/PublicationProvider"
-import { useFormFields } from "../hooks/useFormFields"
+import { usePublication } from "../../context/PublicationProvider"
+import { useFormFields } from "../../hooks/useFormFields"
  
 
-export const ModalForPublication = ({isPublicationOpen, onPublicationClose}) => {
+export const ModalCreatePublication = ({isPublicationOpen, onPublicationClose}) => {
   const {createPublicationHandler}  = usePublication()  
   const {fields, fieldsInputs} = useFormFields()  
 

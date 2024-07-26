@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react"
-import { useFormFields } from "../hooks/useFormFields"
+import { useFormFields } from "../../hooks/useFormFields"
 import { useState } from "react"
-import { searchUser } from "../api/auth"
+import { searchUser } from "../../api/auth"
 import { Link } from "react-router-dom"
 
 

@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 
@@ -16,6 +17,48 @@
 .contenedorInfouser .child2 {
     border: solid rgb(238, 63, 229) 3px;
     flex: 3 1 0;
+}
+
+
+.contenedorInfouser .child2 > * {
+    margin-top: 10px;
+}
+
+.child2 .primerCapa {
+    display : flex;
+    justify-content: start;
+    align-items: start;
+}
+.primerCapa > * {
+    margin-left: 15px;
+}
+
+.child2 .primerCapa .button {
+    background-color: rgb(240, 240, 240);
+    padding: .2rem;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+
+.child2 .segundaCapa {
+    display : flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.segundaCapa > * {
+    margin-left: 15px;
+}
+
+
+
+.child2 .tercerCapa {
+    /* display : flex;
+    justify-content: space-around */
+}
+.tercerCapa > * {
+    margin-left: 15px;
 }
 
 
@@ -97,12 +140,21 @@
 
     .contenedorInfouser {
         border: solid green 1px;
-        width: 80%;
+        width: 100%;
         margin: 50px auto;
         display: flex;
         justify-content: center;
+        flex-direction: column;
     }
     
+    .child1 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .child2{
+        width: 100%;
     
+    }
 
 }

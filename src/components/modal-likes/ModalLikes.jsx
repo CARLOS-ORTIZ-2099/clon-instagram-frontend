@@ -2,8 +2,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from 'react'
-import './modal-likes.css'
-import { getLikePublication } from '../api/likePublication'
+
+import { getLikePublication } from '../../api/likePublication'
 import { Link } from 'react-router-dom'
 import { Avatar, Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 

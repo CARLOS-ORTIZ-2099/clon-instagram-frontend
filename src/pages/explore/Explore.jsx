@@ -29,7 +29,7 @@ export const Explore = () => {
         
         <div  className={styles.contenedorImagenes}>
         {
-            publicationsRandom.length > 1 ? 
+            publicationsRandom.length > 0 ? 
               (
                 publicationsRandom.map((publication) => (
                   
@@ -48,7 +48,7 @@ export const Explore = () => {
                         no hay nada para mostrar
                     </h3>
                 )
-            } 
+        } 
  </div> 
              
     

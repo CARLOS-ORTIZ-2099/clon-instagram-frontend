@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* import { Box, Grid, GridItem, useBreakpointValue, useMediaQuery } from "@chakra-ui/react" */
 import { Sidebar } from "../components/sidebar/Sidebar"
-import { ModalForPublication } from "../components/ModalForPublication"
+import { ModalCreatePublication } from "../components/modal-create-publication/ModalCreatePublication"
 import { Outlet, useLocation } from "react-router-dom"
 import { useEffect } from "react"
 
 import styles from './gridLayout.module.css'
 import { useDisclosure } from "@chakra-ui/react"
-import { ModalSearch } from "../components/ModalSearch"
+import { ModalSearch } from "../components/modal-search/ModalSearch"
 console.log(styles);
 
 export const GridLayout = () => {
@@ -30,7 +30,7 @@ export const GridLayout = () => {
         }
 
         {
-          isPublicationOpen && <ModalForPublication isPublicationOpen = {isPublicationOpen} onPublicationClose={onPublicationClose}/>
+          isPublicationOpen && <ModalCreatePublication isPublicationOpen = {isPublicationOpen} onPublicationClose={onPublicationClose}/>
         }
           <Outlet/>
     </div>
