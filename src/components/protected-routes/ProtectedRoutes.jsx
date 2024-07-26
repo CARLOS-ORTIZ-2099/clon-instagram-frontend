@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { Navigate } from "react-router-dom"
-import { ChakraProvider} from "@chakra-ui/react";
+/* import { ChakraProvider} from "@chakra-ui/react"; */
 import { GridLayout } from "../../layout/GridLayout";
 import { useAuth } from "../../context/AuthProvider";
 
@@ -21,11 +21,11 @@ export const ProtectedRoutes = () => {
 
   
   return (
-    <ChakraProvider>
+   /*  <ChakraProvider> */
         <GridLayout>
 
         </GridLayout>
-    </ChakraProvider>
+    /* </ChakraProvider> */
   )
 
 

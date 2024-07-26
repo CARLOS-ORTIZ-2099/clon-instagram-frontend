@@ -1,63 +1,13 @@
-.containerMain {
-    /* border : solid blue 5px; */
-    display : flex;
-    align-items: center;
-    justify-content : center;
-    min-height : 100vh;
-    text-transform: capitalize;
-    font-family: 'Roboto', sans-serif;
-    
-}
-
-.containerLogin {
-    /* border: dashed rgb(28, 239, 176) 3px; */
-    display: flex;
-    gap: 2rem;
-}
-
-
-
-.containerImage {
-    flex : 1 1 0;
-   /*  border: solid rgb(223, 33, 169) 2px; */
-}
-
-
-
-
-.containerForm {
-    flex: 1 1 0;
-    /* border: solid green 3px; */
-    padding: 1.2rem;
-    text-align: center;
-    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
-}
-
-
-.containerFormChildren1 {
-   /*  border: solid rgb(196, 192, 192) 1.2px; */
-    width: 100%;
-    padding: 1.2rem;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
-}
-
 .form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding: 1rem 1rem 0;
-    /* border: solid skyblue 2px; */
-    /* border-bottom: solid black 1px; */
 }
 
-
-.input {
-    height: 27px;
-    border-radius: 4px;
-}
 
 .button {
-    height: 27px;
+    height: 35px;
     border-radius: 7px;
     background-color: #4cb5f9;
     padding: .9rem;
@@ -71,47 +21,5 @@
     font-weight: bold;
 }
 
-
-.containerFormChildren2 {
-    /* border: solid rgb(72, 234, 202) 1px; */
-    padding: 1rem;
-    margin-top: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
-    font-size: small;
-    width: 100%;
-}
-
-.containerFormChildren3 {
-    /* border: solid rgb(236, 208, 68) 1px; */
-    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
-    font-size: small; 
-    padding: 1rem;
-    width: 100%;
-}
-
-/* media querys */
-/* mientras la pantalla no sobrepase el limite seguira establecida con los estilos de abajo */
- @media screen  and (max-width : 700px){
-    .containerImage {
-        display: none;
-    }
-    .containerLogin {
-        width: 100%;
-        height: 100vh;
-    }
-    .containerFormChildren1 {
-        width: auto;
-    }
-    .containerFormChildren2 {
-        margin-top: 4rem;
-        width: auto;
-    }
-    .containerFormChildren3 {
-        margin-top:3rem;
-        width: auto;
-    }
-    
-   
-}
 
 

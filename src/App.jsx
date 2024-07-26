@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>
-        <BrowserRouter>
+      <BrowserRouter>
         <AuthProvider>
             <PublicationProvider>
               <CommentProvider>
@@ -49,8 +49,8 @@ function App() {
                 </Routes>
               </CommentProvider>
             </PublicationProvider>
-          </AuthProvider>
-        </BrowserRouter>
+        </AuthProvider>
+      </BrowserRouter>
     </>
   )
 }
