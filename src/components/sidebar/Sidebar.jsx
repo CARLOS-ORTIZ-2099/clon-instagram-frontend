@@ -2,54 +2,69 @@
 import { Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthProvider"
 
-import styles from './sidebar.module.css'
-import img from '../../assets/images/instagramLogo2.png'
+import img from '../../assets/images/logo.png'
+import { Box, Image } from "@chakra-ui/react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {  faDoorOpen, faHouse, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
+import { faCompass, faSquarePlus, faUser } from "@fortawesome/free-regular-svg-icons"
 
-export const Sidebar = ({/* changeActive, */ onOpen, onPublicationOpen}) => { 
+export const Sidebar = ({ onOpen, onPublicationOpen}) => { 
 
     const {logoutHandler, user} = useAuth()
 
     return (
-    <nav className={styles.container}>
-        <span className={styles.imgContainer}>
-            <img className={styles.imgContainerImg} src={img} alt="" />
-        </span>
-        <ul className={styles.ulContainer}>
-            <li >
-                <Link to={'/home'}><i className={`bi bi-house-door-fill ${styles.sizeIcons}`}></i> 
-                    <span className={styles.text}> incio</span>
+    <Box as="nav" display={'flex'} position={{base:'fixed', lg:'relative'}} zIndex={{base:'9999',lg:'auto'}}
+        flexDirection={'column'} bg={'rgb(30, 91, 204)'} 
+        
+    >
+        <Box border={'solid red 2px'} position={'fixed'} display={{base:'none', lg:'block'}}>
+            <Image w={'50%'} src={img}/>
+        </Box>
+
+        <Box as="ul" border={'solid green 3px'} mt={'7rem'} h={{base:'7vh', lg:'60vh'}} display={'flex'} flexDirection={{base:'row', lg:'column'}}
+        justifyContent={'space-around'} position={'fixed'} w={{base:'100%', lg:'350px'}} listStyleType={'none'} bg={{base:'gray', lg:'none'}}
+        bottom={{base:'0', lg:'auto'}} alignItems={{base:'center', lg:'start'}}>
+
+            <Box as="li" border={'solid red 1px'} ml={'10px'} >
+                <Link to={'/home'}>
+                    <FontAwesomeIcon  icon={faHouse} size="xl"/>
+                    <Box as="span" display={{base:'none', lg:'inline'}} ml={'10px'}> incio</Box>
                 </Link>
-            </li>
-            <li onClick={onOpen} /* onClick={() => setActivateSearch(!activateSearch)} */>
-                <i className={`bi bi-search ${styles.sizeIcons}`}></i> 
-                <span className={styles.text}> buscar</span>
-            </li>
-            {/* { 
-                activateSearch && <UserSearch/>
-            } */}
-            <li>
-                <Link to={'/explore'}><i className={`bi bi-browser-safari ${styles.sizeIcons}`}></i> 
-                    <span className={styles.text}> explorar</span>
+            </Box>
+
+            <Box as="li"  onClick={onOpen} ml={'10px'} >
+                <FontAwesomeIcon icon={faMagnifyingGlass} size="xl"/>
+                <Box as="span" display={{base:'none', lg:'inline'}} ml={'10px'}> buscar</Box>
+            </Box>
+ 
+            <Box as="li" ml={'10px'}>
+                <Link to={'/explore'}>
+                    <FontAwesomeIcon icon={faCompass} size="xl" />
+                    <Box as='span'  display={{base:'none', lg:'inline'}} ml={'10px'}> explorar</Box>
                 </Link>
-            </li>
+            </Box>
             
-            <li onClick={/* changeActive */ onPublicationOpen}>
-                <i className={`bi bi-plus-square-fill ${styles.sizeIcons}`}></i> 
-                <span className={styles.text}> crear</span>
-            </li>
-            <li>
-                <Link  to={`/${user.username}`}><i className={`bi bi-person-circle ${styles.sizeIcons}`}></i> 
-                    <span className={styles.text}> perfil</span>
+            <Box as="li" ml={'10px'}  onClick={onPublicationOpen}>
+                <FontAwesomeIcon icon={faSquarePlus} size="xl"/> 
+                <Box as="span"  display={{base:'none', lg:'inline'}} ml={'10px'}> crear</Box>
+            </Box>
+
+            <Box as="li" ml={'10px'}>
+                <Link  to={`/${user.username}`}>
+                    <FontAwesomeIcon icon={faUser} size="xl"/>
+                    <Box as="span" display={{base:'none', lg:'inline'}} ml={'10px'}> perfil</Box>
                 </Link>
-            </li>
-            <li>
-                <Link onClick={logoutHandler}> <i className={`bi bi-door-closed-fill ${styles.sizeIcons}`}></i> 
-                    <span className={styles.text}> cerrar sesion</span>
+            </Box>
+
+            <Box as="li" ml={'10px'}>
+                <Link onClick={logoutHandler}> 
+                <FontAwesomeIcon icon={faDoorOpen}  size="xl"/> 
+                    <Box as="span" display={{base:'none', lg:'inline'}} ml={'10px'}> cerrar sesion</Box>
                 </Link>
-            </li>
-                      
-        </ul>
-    </nav>
+            </Box>                     
+        </Box>
+
+    </Box>
   )
 }
 

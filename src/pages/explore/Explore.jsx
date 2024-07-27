@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { getPublicationsRandom } from "../../api/publication"
-import { Link } from "react-router-dom"
-
-import styles from './explore.module.css'
+import { Box, Text } from "@chakra-ui/react"
+import { ImagesContainer } from "../../components/grid-images-container/ImagesContainer"
+import { PublicationImage } from "../../components/publication-image/PublicationImage"
 
 export const Explore = () => {
 
@@ -19,41 +19,28 @@ export const Explore = () => {
   }
 
 
-
- if(publicationsRandom.length < 1) {
-  return <div className={styles.linea}>cargando...</div>
- }  
+ if(publicationsRandom.length < 1) return <div >cargando...</div>
+  
 
   return (
-    <div className={styles.galeria}>
-        
-        <div  className={styles.contenedorImagenes}>
-        {
-            publicationsRandom.length > 0 ? 
+    <Box mt={'30px'} textAlign={'center'}>
+        <ImagesContainer>
+          {
+            publicationsRandom?.length > 0 ? 
               (
-                publicationsRandom.map((publication) => (
-                  
-                    <Link to={'/p/'+publication._id} key={publication._id} className={styles.imagen}>
-                      <img className={styles.img} src={'http://localhost:3000'+publication.file} alt="" />
-                        <div className={styles.overlay}>
-                            <span><i className="bi bi-heart-fill"></i> {publication.likes.length}</span>
-                            <span><i className="bi bi-chat-fill"></i> {publication.comments.length}</span>
-                        </div>
-                    </Link>
-                        
-                    ))
-                ) 
-                : (
-                    <h3>
-                        no hay nada para mostrar
-                    </h3>
-                )
-        } 
- </div> 
-             
-    
-    
-    </div>
+                publicationsRandom.map((publication) => (              
+                  <PublicationImage key={publication._id} 
+                  publication={publication}/> 
+                ))
+              ) 
+              : 
+              (
+                <Text> no hay nada para mostrar </Text>
+              )
+          } 
+        </ImagesContainer>   
+      
+    </Box>
   )
 
 

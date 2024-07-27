@@ -5,8 +5,7 @@ import { useAuth } from "../../context/AuthProvider";
 import imgGoogle from '../../assets/images/googlePlay.png'
 import imgMicrosoft from '../../assets/images/microsoft.png'
 import imgInstagram from '../../assets/images/logo.png'
-import styles from './register.module.css'
-import { AbsoluteCenter, Box, Divider, Img, Input, Text, VStack } from "@chakra-ui/react";
+import { AbsoluteCenter, Box, Button, Divider, Image, Img, Input, Text, VStack } from "@chakra-ui/react";
 
 export const Register = () => {
   const {fields, fieldsInputs } = useFormFields() 
@@ -25,7 +24,6 @@ export const Register = () => {
              textAlign={'center'} justifyContent={'space-evenly'}>
               <Box p={'1.2rem'} /* border={'solid red 1px'} */ boxShadow={{base : 'none', sm:'0px 4px 8px rgba(0, 0, 0, 0.2)'}} w={'100%'}>
                 <Img w={'200px'}  src={imgInstagram} m={'0 auto'} />
-
                 <Text fontSize={'lg'} fontWeight={'bold'}>Regístrate para ver fotos y vídeos de </Text>
                 <Text fontSize={'lg'} fontWeight={'bold'}>tus amigos.</Text>
                 <Box position='relative' padding='5'>
@@ -34,11 +32,11 @@ export const Register = () => {
                     o
                   </AbsoluteCenter>
                 </Box>
-                <form onSubmit={sendData} noValidate className={styles.form}>
+                <Box as="form" onSubmit={sendData} display={'flex'} flexDirection={'column'} gap={'1rem'} p={'1rem 1rem 0'} noValidate >
                     <Input h={'38px'}onChange={fieldsInputs} name="fullname" type="text" placeholder="name"/>
-                    <Input h={'38px'} className={styles.input} onChange={fieldsInputs} name="username"  type="text" placeholder="username"/>
-                    <Input h={'38px'} className={styles.input} onChange={fieldsInputs} name="email" type="email" placeholder="email" />
-                    <Input h={'38px'} className={styles.input} onChange={fieldsInputs} name="password" type="text" placeholder="password" />
+                    <Input h={'38px'} onChange={fieldsInputs} name="username"  type="text" placeholder="username"/>
+                    <Input h={'38px'} onChange={fieldsInputs} name="email" type="email" placeholder="email" />
+                    <Input h={'38px'} onChange={fieldsInputs} name="password" type="text" placeholder="password" />
                     <Box > 
                       <Text fontSize={'xs'}>
                         Es posible que las personas que usan nuestro 
@@ -58,8 +56,10 @@ export const Register = () => {
                         Política de privacidad y la Política de cookies. 
                       </Text>
                     </Box>
-                    <input className={styles.button} type="submit" value='registrarte'/>
-                </form>
+                    <Button h={'35px'} borderRadius={'7px'} bg={'#4cb5f9'}
+                      p={'.9rem'} fontWeight={'bolder'} color={'aliceblue'}
+                    >registrarte</Button>
+                </Box>
               </Box>
 
               <Box /* border={'solid green 2px'} */ boxShadow={{base : 'none', sm:'0px 4px 8px rgba(0, 0, 0, 0.2)'}} w={'100%'} p={'1.2rem'}> 
@@ -71,8 +71,8 @@ export const Register = () => {
                 /* border={'solid coral 2px'} */>
                   <Text mb={'10px'}>descarga la aplicacion</Text>
                   <Box display={'flex'} justifyContent={'center'} gap={'10px'} >
-                    <img width={'100px'} height={'30px'} src={imgGoogle} alt="" />
-                    <img width={'100px'} height={'30px'} src={imgMicrosoft} 
+                    <Image width={'100px'} height={'32px'} src={imgGoogle} alt="" />
+                    <Image width={'100px'} height={'32px'} src={imgMicrosoft} 
                   />
                   </Box>
               </Box>

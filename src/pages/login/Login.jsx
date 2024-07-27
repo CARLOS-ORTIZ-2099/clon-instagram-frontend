@@ -7,8 +7,7 @@ import img from '../../assets/images/auth.png'
 import imgGoogle from '../../assets/images/googlePlay.png'
 import imgMicrosoft from '../../assets/images/microsoft.png'
 import imgInstagram from '../../assets/images/logo.png'
-import styles from './login.module.css'
-import { AbsoluteCenter, Box, Center, Divider, Image, Input, Text, VStack } from "@chakra-ui/react"
+import { AbsoluteCenter, Box, Button, Center, Divider, Image, Input, Text, VStack } from "@chakra-ui/react"
 
 export const Login = () => {
 
@@ -41,18 +40,20 @@ export const Login = () => {
                 boxShadow={{base : 'none', sm:'0px 4px 8px rgba(0, 0, 0, 0.2)'}}>
                   <Image src={imgInstagram} w={'200px'} m={'0 auto'}/>
 
-                  <form className={styles.form} onSubmit={sendData} noValidate >
+                  <Box as="form" display={'flex'} flexDirection={'column'} gap={'1rem'} p={'1rem 1rem 0'}  
+                        onSubmit={sendData} noValidate >
                       <Input h={'38px'} onChange={fieldsInputs} name="email" type="email" placeholder="email" />
                       <Input h={'38px'} onChange={fieldsInputs} name="password" type="text" placeholder="password" />
-                      <input className={styles.button} type="submit" value='iniciar sesion'/>
+                      <Button h={'35px'} borderRadius={'7px'} bg={'#4cb5f9'} p={'.9rem'} fontWeight={'bolder'} 
+                      color={'aliceblue'} lineHeight={'4px'} type="submit">iniciar sesion</Button>
                       <Box position='relative' padding='5'>
                         <Divider />
                         <AbsoluteCenter bg='white' px='4'>
                           o
                         </AbsoluteCenter>
                     </Box>
-                  </form>        
-                  <Text className={styles.formParagraph}>iniciar sesion con facebook</Text>
+                  </Box>        
+                  <Text fontSize={'small'} fontWeight={'bold'}>iniciar sesion con facebook</Text>
               </Box>
 
               <Center p={'1rem'} mt={'10px'} fontSize={'small'} width={'100%'}boxShadow={{base : 'none', sm:'0px 4px 8px rgba(0, 0, 0, 0.2)'}}>
@@ -64,8 +65,8 @@ export const Login = () => {
                 /* border={'solid coral 2px'} */>
                   <Text mb={'10px'}>descarga la aplicacion</Text>
                   <Box display={'flex'} justifyContent={'center'} gap={'10px'} >
-                    <img width={'100px'} height={'30px'} src={imgGoogle} alt="" />
-                    <img width={'100px'} height={'30px'} src={imgMicrosoft} 
+                    <Image width={'100px'} height={'32px'} src={imgGoogle} alt="" />
+                    <Image width={'100px'} height={'32px'} src={imgMicrosoft} 
                   />
                   </Box>
               </Box>

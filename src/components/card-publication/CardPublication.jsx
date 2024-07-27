@@ -6,7 +6,9 @@ import { useAuth } from '../../context/AuthProvider'
 import { usePublication } from '../../context/PublicationProvider'
 import { likePublication } from '../../api/likePublication'
 import { createComment } from '../../api/comment'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsis , faHeart} from '@fortawesome/free-solid-svg-icons'
+import {faHeart as whiteHeart, faComment, faPaperPlane} from '@fortawesome/free-regular-svg-icons'
 
  
 export const CardPublication = ({publication, onOpen, setIdPublication}) => {
@@ -46,7 +48,6 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
           }
     }
 
-
     const sendLike = async(id) => {
         try {
           const response = await likePublication(id)
@@ -79,74 +80,61 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
     
   return (
     <Card border={'solid blue 1px'} maxW='md'>
-
         <CardHeader>
-
           <Flex spacing='4'>
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
-
               <Avatar name={`${publication?.ownerPublication?.username}`}  />
-
               <Box>
-                <Heading size='sm'> <Link to={`/${publication.ownerPublication.username}`}>{publication.ownerPublication.username}</Link> </Heading>
+                <Heading size='sm'> 
+                  <Link to={`/${publication.ownerPublication.username}`}>{publication.ownerPublication.username}</Link> 
+                </Heading>
                 <Text>Creator, Chakra UI</Text>
               </Box>
-
             </Flex>
 
-            <IconButton
-              variant='ghost'
-              colorScheme='gray'
-              aria-label='See menu'
-              icon={<i className="bi bi-three-dots-vertical"></i>}
-            />
+             <IconButton variant='ghost'colorScheme='gray' aria-label='See menu'>
+                <FontAwesomeIcon icon={faEllipsis} />
+            </IconButton>             
           </Flex>
-
         </CardHeader>
 
-        <Image
-          objectFit='cover'
-          height={'400px'}
+        <Image objectFit='cover' height={'400px'}
           src={'http://localhost:3000'+publication.file}
           alt='Chakra UI'
         />
 
-
         <CardBody border={'solid green 1px'} p={0}>
           <Box> 
               <Button onClick={() => sendLike(publication._id)}  variant='ghost' 
-                leftIcon={ publication.likes.find(like => like.ownerLike === user.id)? <i className="bi bi-x-circle-fill"></i> : <i className="bi bi-heart-fill"></i>  }>
+                leftIcon={ publication.likes.find(like => like.ownerLike === user.id) ? 
+                  <FontAwesomeIcon icon={faHeart} style={{color: "#ef1f1f",}} size='xl'/> : <FontAwesomeIcon icon={whiteHeart} size='xl'/>   }>
               </Button>
-
-            
+      
               <Button  variant='ghost'>
-                <Link to={'/p/'+publication._id}>
-                {<i className="bi bi-chat-fill"></i>}
-                </Link>
+                <Link to={'/p/'+publication._id}> <FontAwesomeIcon icon={faComment} size='xl'/> </Link>
               </Button>
 
-              <Button  variant='ghost' leftIcon={<i className="bi bi-share-fill"></i>}>
+              <Button  variant='ghost' leftIcon={<FontAwesomeIcon icon={faPaperPlane} rotation={270} size='xl'/>} >
+              
               </Button>
           </Box>
             
-            <Text onClick={ () => changeState(publication._id) }>{publication.likes.length} me gusta </Text>
+            <Text ml={'16px'} onClick={ () => changeState(publication._id) }>{publication.likes.length} Me gusta </Text>
         </CardBody>
 
         <CardFooter display={'flex'} flexDirection={'column'}>
-            <Text>
-            {publication.ownerPublication.username} : {publication.content}
+            <Text >
+                <Text as='b'>{publication.ownerPublication.username}</Text> {publication.content}
             </Text>
-
             <Box>
             {
               publication.comments.length < 1 ? 
-              <p>se el primero en comentar</p> 
+              <Text>se el primero en comentar</Text> 
               :<Link to={'/p/'+publication._id}>
                 ver los {publication.comments.length} comentarios
               </Link> 
             }
             </Box>
- 
             <form  onSubmit={(e) => sendComment(e, publication._id)}>
               <Box display={'flex'} >
                 <Input variant='flushed' id={publication._id}  placeholder="agregar un comentario" onChange={handlerComment} name="content"  />
@@ -157,12 +145,8 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
                     </Button>
                   }       
               </Box>
-              
             </form>
-            
         </CardFooter>
-
-        
     </Card> 
   )
 

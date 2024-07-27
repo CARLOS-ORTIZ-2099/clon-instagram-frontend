@@ -3,9 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { usePublication } from "../../context/PublicationProvider"
 import { ModalLikes } from "../../components/modal-likes/ModalLikes"
 import { CardPublication } from "../../components/card-publication/CardPublication"
-import styles from './home.module.css'
-import { useDisclosure } from "@chakra-ui/react"
-
+import { Box, useDisclosure } from "@chakra-ui/react"
 
 
 export const Home = () => {  
@@ -46,9 +44,10 @@ export const Home = () => {
  
 
   return ( 
-    <div className={styles.container}>
+    <Box border={'solid green 3px'} display={'flex'} flexDirection={'column'} 
+         gap={'1.5rem'} justifyContent={'center'} alignItems={'center'} bg={'#5da8db'}>
       {
-        publications?.map((publication) => (
+        publications/* ?.slice(0,0)? */.map((publication) => (
             <CardPublication key={publication._id}
               publication = {publication}
               onOpen = {onOpen}
@@ -62,7 +61,7 @@ export const Home = () => {
       {
         isOpen && <ModalLikes isOpen = {isOpen} onClose={onClose} idPublication={idPublication} />
       }
-    </div>
+    </Box>
   )
 }
 

@@ -1,9 +1,0 @@
-.container {
-    background-color: #5da8db;
-    border : solid green 3px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    justify-content: center;
-    align-items: center;
-}
