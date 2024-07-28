@@ -46,14 +46,14 @@ export const ModalLikes = ({isOpen, onClose, idPublication}) => {
                       likes.map(like => (
                         <Box key={like._id} display={'flex'} marginTop={2}>
                             <Box marginRight={2}>
-                              <Link to={`/${like.ownerLike.username}`}>
+                              <Link to={`/profile/${like.ownerLike.username}`}>
                               <Avatar name={`${like.ownerLike.fullname}`}  /> 
                               </Link>
                                
                             </Box>
                             <Box>
                               <Text fontWeight={'bold'}>
-                                <Link  to={`/${like.ownerLike.username}`}>{like.ownerLike.username}</Link>
+                                <Link  to={`/profile/${like.ownerLike.username}`}>{like.ownerLike.username}</Link>
                               </Text>                             
                                 <Text>{like.ownerLike.fullname}</Text>
                             </Box>      

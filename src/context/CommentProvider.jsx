@@ -16,12 +16,11 @@ export const CommentProvider = ({children}) => {
 
   const deleteCommentHandler = async (id) => {
     try{
-      console.log(id); 
+      //console.log(id); 
       const response = await deletecomment(id)
-      console.log(response);
+      //console.log(response);
       const updateComments = publication.comments.filter((comment) => comment._id != id)
       setPublication({...publication, comments : updateComments})
-
       const publicationUpdate  = publications.map((pb) => pb._id === publication._id ?
         {...pb, comments : pb.comments.filter((comment) => comment._id !== id)} : pb
       )
@@ -44,14 +43,12 @@ export const CommentProvider = ({children}) => {
         console.log(comment);
         //console.log(publication);
         console.log(publications);
-        
         setPublication((previous) => ( {...previous, comments : [...previous.comments, comment]} ))
 
         const publicationUpdate = publications.map((pb) => pb._id === id 
         ? {...pb, comments : [...pb.comments, comment ]} : pb 
         )
         setPublications(publicationUpdate)
-
      }catch(error) {
         console.log(error);
      }

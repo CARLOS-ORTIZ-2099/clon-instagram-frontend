@@ -79,7 +79,7 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
 
     
   return (
-    <Card border={'solid blue 1px'} maxW='md'>
+    <Card /* border={'solid blue 1px'} */ maxW='md'>
         <CardHeader>
           <Flex spacing='4'>
             <Flex flex='1' gap='4' alignItems='center' flexWrap='wrap'>
@@ -103,7 +103,7 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
           alt='Chakra UI'
         />
 
-        <CardBody border={'solid green 1px'} p={0}>
+        <CardBody /* border={'solid green 1px'} */ p={0}>
           <Box> 
               <Button onClick={() => sendLike(publication._id)}  variant='ghost' 
                 leftIcon={ publication.likes.find(like => like.ownerLike === user.id) ? 

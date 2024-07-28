@@ -14,42 +14,38 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
 
   return (
     <>
-      <Box border={'solid red 5px'} display={'flex'} flexDirection={'column'}
+      <Box /* border={'solid red 5px'} */ display={'flex'} flexDirection={'column'}
           justifyContent={'center'}
           alignItems={'center'}
       >
-          <Card
+        <Card
             direction={{ base: 'column', md: 'row' }}
             overflow='hidden'
             variant='outline'
             minH={'70vh'}
             width={{base : '100%', lg : '60%'}}   
           >
-              <Image
-                objectFit='cover'
-                maxW={{ base: '100%', md: '60%' }}
-                src={`http://localhost:3000${publication.file}`}
-                alt='Caffe Latte'
-              />
-
-              <Stack border={'solid green 2px'} maxHeight={'70vh'} overflowY={'auto'} width={{base : '100%', md : '60%'}}>
-
-                <CardBody border={'solid red 2px'}>
+            <Image
+              objectFit='cover'
+              maxW={{ base: '100%', md: '60%' }}
+              src={`http://localhost:3000${publication.file}`}
+              alt='Caffe Latte'
+            />
+            <Stack /* border={'solid green 2px'} */ maxHeight={'70vh'} overflowY={'auto'} width={{base : '100%', md : '60%'}}>
+                <CardBody /* border={'solid red 2px'} */>
                   <Heading size='md' display={'flex'} justifyContent={'space-between'}>
                     <Link to={`/profile/${publication?.ownerPublication?.username}`}>
                       <Text>{publication?.ownerPublication?.username}</Text>
                     </Link>
                     <FontAwesomeIcon icon={faEllipsis} onClick={showModalOptionsPublication}/>
                   </Heading>
-
                   <Text py='2'>
                     {publication?.ownerPublication?.username}: {publication.content}
                   </Text>
-
                   {
                     publication?.comments?.length > 0 ?(
                       publication.comments.map((comment) => (
-                        <Box border={'solid blue 2px'} fontSize={'small'}  key={comment._id}>
+                        <Box /* border={'solid blue 2px'} */ fontSize={'small'}  key={comment._id}>
                             <Avatar size={'sm'} name={comment.ownerComment.username}/>
                             <Link to={`/profile/${comment.ownerComment.username}`}>
                               <Box as="span" fontWeight={'bold'}> {comment. ownerComment.username}</Box>
@@ -61,10 +57,8 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
                       ))
                     ) 
                     : <Text>no hay comentarios</Text>
-                  }
-                          
+                  }                          
                 </CardBody>
-
                 <CardFooter display={'flex'} flexDirection={'column'}   gap={'8px'} marginBottom={'30px'}>
                     <Box display={'flex'} justifyContent={'center'} gap={'10px'}>
                         <Button variant='ghost' onClick={() => sendLike(publication._id)}>
@@ -77,14 +71,12 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
                         <Button variant='ghost'>
                             <FontAwesomeIcon icon={faComment} size='xl'/>
                         </Button>
-                    </Box>
-                  
+                    </Box>          
                     <Box display={'flex'} justifyContent={'center'} gap={'10px'}>
                       <Text onClick={showModalLikes}>{ publication?.likes?.length > 0
                           ? `${publication.likes.length} me gusta` 
                           : 'Sé el primero en indicar que te gusta' }
-                      </Text>
-                            
+                      </Text>                
                       <Text>
                           {
                             publication?.comments?.length > 0 
@@ -93,7 +85,6 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
                           }
                       </Text>
                     </Box>
-
                       <Box display={'flex'} alignItems={'center'} justifyContent={'space-around'} as="form" onSubmit={(e) => createComment(e, e.target.content.value)}>
                         <Input
                             w={'auto'}
@@ -104,10 +95,8 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
                         <Button size={'sm'} type="submit">publicar</Button>  
                       </Box>
                 </CardFooter>
-
-              </Stack>
-
-          </Card>     
+            </Stack>
+        </Card>     
       </Box>
     </>
   )

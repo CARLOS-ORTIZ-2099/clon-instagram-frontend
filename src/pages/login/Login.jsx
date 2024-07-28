@@ -59,7 +59,7 @@ export const Login = () => {
               </Box>
 
               <Center p={'1rem'} mt={'10px'} fontSize={'small'} width={'100%'}boxShadow={{base : 'none', sm:'0px 4px 8px rgba(0, 0, 0, 0.2)'}}>
-                <span>¿no tienes una cuenta? </span>  
+                <Box as='span'>¿no tienes una cuenta? </Box>  
                 <Link style={{textDecoration : 'none', color: '#0095f6'}} to='/'> registrate</Link>
               </Center> 
                 
@@ -79,5 +79,3 @@ export const Login = () => {
   )
 }
 
-
-      

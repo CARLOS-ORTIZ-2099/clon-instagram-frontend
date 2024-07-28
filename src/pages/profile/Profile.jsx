@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {createfollower, unFollowUser } from "../../api/follower";
 import { profileUser } from "../../api/auth";
-import {Text, useDisclosure } from "@chakra-ui/react";
+import {Box, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import { ModalFolloweds } from "../../components/modal-followeds/ModalFolloweds";
 import { ModalFollowers } from "../../components/modal-followers.jsx/ModalFollowers";
 import { ProfileCard } from "../../components/profile-card/ProfileCard";
@@ -50,21 +50,25 @@ export const Profile = () => {
   const { isOpen : isOpenModalFolloweds , onOpen : onOpenModalFolloweds, onClose : onCloseModalFolloweds } = useDisclosure()
   const { isOpen : isOpenModalFollowers, onOpen  : onOpenModalFollowers, onClose : onCloseModalFollowers } = useDisclosure()
 
-  if(!infoUser) return <h1>cargando</h1>
+  if(!infoUser) return <Spinner m={'0 auto'}
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+          />        
    
   return (
-    <div>
-
-     <ProfileCard infoUser={infoUser} 
-          deleteFollowerHandler={deleteFollowerHandler} 
-          followerHandler={followerHandler} 
-          onOpenModalFolloweds={onOpenModalFolloweds}
-          onOpenModalFollowers={onOpenModalFollowers}
+    <Box >
+        <ProfileCard infoUser={infoUser} 
+        deleteFollowerHandler={deleteFollowerHandler} 
+        followerHandler={followerHandler} 
+        onOpenModalFolloweds={onOpenModalFolloweds}
+        onOpenModalFollowers={onOpenModalFollowers}
      />
-
       <ImagesContainer>
         {
-          infoUser?.publications.length > 0 ?
+          infoUser?.publications?.length > 0 ?
             (
               infoUser.publications.map((publication) => (              
                 <PublicationImage key={publication._id} publication={publication}/>            
@@ -80,20 +84,18 @@ export const Profile = () => {
         isOpenModalFollowers && <ModalFollowers 
           isOpen={isOpenModalFollowers}
           onClose={onCloseModalFollowers}
-          id={infoUser._id}
+          idQuery={infoUser._id}
           profilehandler={profilehandler}
         />
       }
-
       {
         isOpenModalFolloweds && <ModalFolloweds 
         isOpen = {isOpenModalFolloweds} 
         onClose={onCloseModalFolloweds}
-        id={infoUser._id}
+        idQuery={infoUser._id}
         profilehandler={profilehandler}
         />
-      }
-      
-    </div>
+      }     
+    </Box>
   )
 }

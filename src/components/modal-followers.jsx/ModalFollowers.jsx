@@ -7,7 +7,7 @@ import { useAuth } from "../../context/AuthProvider";
 import { Avatar, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 
 
-export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
+export const ModalFollowers = ({isOpen, onClose, idQuery, profilehandler}) => {
 
   const [loading, setLoading] = useState(false)
   const [followers, setFollowers] = useState([])
@@ -20,7 +20,7 @@ export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
     const petitionFollowers = async() => {
         setLoading(true)
         try{
-            const {data} = await getFollowers(id)
+            const {data} = await getFollowers(idQuery)
             console.log(data);
             setFollowers(data)
             setLoading(false)  
@@ -74,14 +74,14 @@ export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
                       followers.map(follower => (
                         <Box key={follower._id} display={'flex'} marginTop={2} gap={'1rem'} alignItems={'center'}>
                             <Box marginRight={2}>
-                              <Link to={`/${follower.followerUser.username}`}>
+                              <Link to={`/profile/${follower.followerUser.username}`}>
                                 <Avatar name={`${follower.followerUser.fullname}`}  /> 
                               </Link>    
                             </Box>
 
                             <Box>
                               <Text fontWeight={'bold'}>
-                                <Link  to={`/${follower.followerUser.username}`}>{follower.followerUser.username}</Link>
+                                <Link  to={`/profile/${follower.followerUser.username}`}>{follower.followerUser.username}</Link>
                               </Text>                             
                                 <Text>{follower.followerUser.fullname}</Text>
                             </Box>  

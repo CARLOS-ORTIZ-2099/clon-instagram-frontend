@@ -23,14 +23,12 @@ export const ProtectedRoutes = () => {
   }, [location])  
 
 
-  if(loading)return <h1>...cargando</h1>
+  if(loading)return <h1>...</h1>
 
   if(!user && !isAunthenticated) return <Navigate to='/login' replace/>
   
-
-  
   return ( 
-    <Grid templateColumns={{base:'1fr', lg:'350px 1fr'}} minHeight={'100vh'}>
+    <Grid bg={'#FAFAFA'} templateColumns={{base:'1fr', lg:'350px 1fr'}} minHeight={'100vh'}>
         <Sidebar onOpen={onOpen} onPublicationOpen={onPublicationOpen} /> 
           {
             isOpen && <ModalSearch isOpen = {isOpen} onClose={onClose}/>

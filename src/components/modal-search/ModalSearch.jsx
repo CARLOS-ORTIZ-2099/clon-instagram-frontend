@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Avatar, Box, Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react"
 import { useFormFields } from "../../hooks/useFormFields"
 import { useState } from "react"
@@ -46,13 +47,13 @@ export const ModalSearch = ({isOpen, onClose}) => {
                           usersMatches.map((user) => (
                             <Box key={user._id} display={'flex'} marginTop={2}>
                                 <Box marginRight={2}>
-                                    <Link to={'/'+user.username}>
+                                    <Link to={'/profile/'+user.username}>
                                         <Avatar name={`${user.fullname}`}  /> 
                                     </Link>
                                 </Box>
                                 <Box>
                                     <Text fontWeight={'bold'}>
-                                        <Link  to={'/'+user.username}>{user.username}</Link>
+                                        <Link  to={'/profile/'+user.username}>{user.username}</Link>
                                     </Text>                             
                                     <span>{user.fullname} </span> 
                                     <span > seguidores : {user.followers.length}</span>

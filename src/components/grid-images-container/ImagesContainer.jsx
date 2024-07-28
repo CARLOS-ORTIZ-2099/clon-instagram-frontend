@@ -9,7 +9,7 @@ export const ImagesContainer = ({children}) => {
     <Box display={'flex'} 
       justifyContent={'space-around'} 
       flexWrap={'wrap'}  
-      w={{base: '98%', md: '90%', lg:'70%'}} 
+      w={{base: '98%', md: '90%', lg:'60%'}} 
       m={'auto'} 
     >
           {children}

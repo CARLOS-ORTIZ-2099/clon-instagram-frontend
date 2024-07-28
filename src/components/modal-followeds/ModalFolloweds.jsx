@@ -6,7 +6,7 @@ import { unFollowUser, createfollower, getFolloweds } from "../../api/follower";
 import { useAuth } from "../../context/AuthProvider";
 import { Avatar, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 
-export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
+export const ModalFolloweds = ({isOpen, onClose, idQuery, profilehandler}) => {
 
 
   const [loading, setLoading] = useState(false)
@@ -20,7 +20,7 @@ export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
     const petitionFollowers = async() => {
         setLoading(true)
         try{
-            const {data} = await getFolloweds(id)
+            const {data} = await getFolloweds(idQuery)
             console.log(data);
             setFolloweds(data)
             setLoading(false)  
@@ -76,14 +76,14 @@ export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
                       followeds.map(followed => (
                         <Box key={followed._id} display={'flex'} marginTop={2} gap={'1rem'} alignItems={'center'}>
                             <Box marginRight={2}>
-                              <Link to={`/${followed.followedUser.username}`}>
+                              <Link to={`/profile/${followed.followedUser.username}`}>
                               <Avatar name={`${followed.followedUser.fullname}`}  /> 
                               </Link>        
                             </Box>
 
                             <Box>
                               <Text fontWeight={'bold'}>
-                                <Link  to={`/${followed.followedUser.username}`}>{followed.followedUser.username}</Link>
+                                <Link  to={`/profile/${followed.followedUser.username}`}>{followed.followedUser.username}</Link>
                               </Text>                             
                                 <Text>{followed.followedUser.fullname}</Text>
                             </Box>  

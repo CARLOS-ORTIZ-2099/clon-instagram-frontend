@@ -14,7 +14,6 @@ export const Register = () => {
   const {registerHandler, errors, setErrors} = useAuth()
 
   useEffect(() => {
-    console.log(errors);
     setErrors(null)
   }, [])
 

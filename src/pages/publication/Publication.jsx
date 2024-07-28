@@ -15,7 +15,7 @@ import { PublicationMain } from "../../components/Publication-main/PublicationMa
 export const Publication = () => {
 
   const {idpublication} = useParams()
-  const {getPublicationHandler, publication, setPublication, setPublications, publications} = usePublication()
+  const {getPublicationHandler, publication, setPublication, publications, setPublications} = usePublication()
   const {user} = useAuth()  
   const {deleteCommentHandler, editCommentHandler, createCommentHandler} = useComment() 
 
@@ -40,8 +40,6 @@ const editComment = (e, id, fields) => {
   }
 }
 
-
-// funcion para eliminar un comentario mio
 const deleteComent = (id) => {
     deleteCommentHandler(id)
     onCloseModalComment()
@@ -51,7 +49,6 @@ const deleteComent = (id) => {
   useEffect(() => {
     getPublicationHandler(idpublication) 
     console.log(publication);
-    /* console.log(user); */
   },[])
 
   
@@ -63,7 +60,6 @@ const deleteComent = (id) => {
         console.log(publication);
         console.log(publications);
         console.log(id); */
-
         if(response.status === 204) {
           // se borro like, deberiamos borrar el like de nuestro estado publication
           const updateLikes = publication.likes.filter((like) => like.ownerLike != user.id)
@@ -144,6 +140,3 @@ const deleteComent = (id) => {
   )
 
 }
-
-
-

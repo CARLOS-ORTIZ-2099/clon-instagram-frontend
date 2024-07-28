@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { getPublicationsRandom } from "../../api/publication"
-import { Box, Text } from "@chakra-ui/react"
+import { Box, Spinner, Text } from "@chakra-ui/react"
 import { ImagesContainer } from "../../components/grid-images-container/ImagesContainer"
 import { PublicationImage } from "../../components/publication-image/PublicationImage"
 
@@ -19,7 +19,14 @@ export const Explore = () => {
   }
 
 
- if(publicationsRandom.length < 1) return <div >cargando...</div>
+ if(publicationsRandom.length < 1) return <Spinner
+        m={'0 auto'} 
+        thickness='4px'
+        speed='0.65s'
+        emptyColor='gray.200'
+        color='blue.500'
+        size='xl'
+        />
   
 
   return (

@@ -13,19 +13,20 @@ export const Sidebar = ({ onOpen, onPublicationOpen}) => {
     const {logoutHandler, user} = useAuth()
 
     return (
-    <Box as="nav" display={'flex'} position={{base:'fixed', lg:'relative'}} zIndex={{base:'9999',lg:'auto'}}
-        flexDirection={'column'} bg={'rgb(30, 91, 204)'} 
-        
+    <Box  as="nav" display={'flex'} position={{base:'fixed', lg:'relative'}} zIndex={{base:'9999',lg:'auto'}}
+        flexDirection={'column'} bg={'#FAFAFA'} 
+        /* border={'solid red 3px'} */
+        boxShadow={{base : 'none', sm:'3px 4px 8px rgba(0, 0, 0, 0.1)'}}
     >
-        <Box border={'solid red 2px'} position={'fixed'} display={{base:'none', lg:'block'}}>
+        <Box /* border={'solid red 2px'} */ position={'fixed'} display={{base:'none', lg:'block'}}>
             <Image w={'50%'} src={img}/>
         </Box>
 
-        <Box as="ul" border={'solid green 3px'} mt={'7rem'} h={{base:'6vh', lg:'60vh'}} display={'flex'} flexDirection={{base:'row', lg:'column'}}
-        justifyContent={'space-around'} position={'fixed'} w={{base:'100%', lg:'350px'}} listStyleType={'none'} bg={{base:'gray', lg:'none'}}
+        <Box as="ul" /* border={'solid green 3px'} */ mt={'7rem'} h={{base:'6vh', lg:'60vh'}} display={'flex'} flexDirection={{base:'row', lg:'column'}}
+        justifyContent={'space-around'} position={'fixed'} w={{base:'100%', lg:'340px'}} listStyleType={'none'} bg={{base:'#FAFAFA'}}
         bottom={{base:'0', lg:'auto'}} alignItems={{base:'center', lg:'start'}}>
 
-            <Box as="li" border={'solid red 1px'} ml={'10px'} >
+            <Box as="li" /* border={'solid red 1px'} */ ml={'10px'} >
                 <Link to={'/home'}>
                     <FontAwesomeIcon  icon={faHouse} size="xl"/>
                     <Box as="span" display={{base:'none', lg:'inline'}} ml={'10px'}> incio</Box>

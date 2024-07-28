@@ -39,8 +39,6 @@ export const PublicationProvider = ({children}) => {
         if(!hasMore) {
           setPublications([...publications, response.data.publicationCreated])
         }
-      
-        /* setActive(false) */
     }catch(error) {
         console.log(error);
     }
@@ -56,11 +54,9 @@ export const PublicationProvider = ({children}) => {
      }else {
       setTimeout(() => {
         setPublications((previous) => [...previous, ...response.data.response]) 
-        /* setPage((previous) => previous+1) */
         setPending(false)
       }, 2000)
-     }
-     
+     } 
     }catch(error) {
       console.log(error);
     }
@@ -73,14 +69,11 @@ export const PublicationProvider = ({children}) => {
         console.log(publications);
         const publicationsUpdate = publications.filter((publication) => publication._id !== publicationDeleted._id)
         setPublications(publicationsUpdate) 
-        navigate(`/${user.username}`)  
+        navigate(`/profile/${user.username}`)  
     }catch(error) {
       console.log(error);
     }
-
   }
-
-
 
 
   const editPublicationHandler = async (id, fields) => {   
@@ -120,10 +113,6 @@ export const PublicationProvider = ({children}) => {
     }
   }
  
- 
-
-
-
 
   const data = {createPublicationHandler, deletePublicationHandler, editPublicationHandler, getPublicationHandler, getPublicationsHandler, publication, setPublication, publications, setPublications, pending, setPending, hasMore}
 
