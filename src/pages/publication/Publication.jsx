@@ -7,9 +7,9 @@ import { useAuth } from "../../context/AuthProvider";
 import { useComment } from "../../context/CommentProvider";
 import { likePublication } from "../../api/likePublication";
 import { ModalLikes } from "../../components/modal-likes/ModalLikes";
-import { Box, Button, Card, CardBody, CardFooter, Heading, Image, Input, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { ModalComment } from "../../components/modal-comment/ModalComment";
-
+import { PublicationMain } from "../../components/Publication-main/PublicationMain";
 
 
 export const Publication = () => {
@@ -19,15 +19,12 @@ export const Publication = () => {
   const {user} = useAuth()  
   const {deleteCommentHandler, editCommentHandler, createCommentHandler} = useComment() 
 
-  // estados para los comentarios
-  const [comment, setComment] = useState( {content : ''} ) 
 
-
-const createComment = (e) => {
+const createComment = (e, comment) => {
     e.preventDefault()
     try {
-      createCommentHandler(idpublication, comment)
-      setComment({content : ''})
+      createCommentHandler(idpublication, {content:comment})
+      e.target.reset()
     }catch(error) {
         console.log(error);
     }
@@ -43,15 +40,23 @@ const editComment = (e, id, fields) => {
   }
 }
 
+
+// funcion para eliminar un comentario mio
+const deleteComent = (id) => {
+    deleteCommentHandler(id)
+    onCloseModalComment()
+} 
+
+
   useEffect(() => {
     getPublicationHandler(idpublication) 
     console.log(publication);
-    console.log(user);
+    /* console.log(user); */
   },[])
 
   
   // funcion para dar like o deslike  
-    const sendLike = async(id) => {
+  const sendLike = async(id) => {
       try {
         const response = await likePublication(id)
       /*   console.log(response);
@@ -89,156 +94,52 @@ const editComment = (e, id, fields) => {
       }
   }
 
- 
-   // funcion para eliminar un comentario mio
-  const deleteComent = (id) => {
-    deleteCommentHandler(id)
-    onCloseModalComment()
-  } 
+  const { isOpen : isOpenModalOptions, onOpen : onOpenModalOptions, onClose : onCloseModalOptions } = useDisclosure()
 
-  // funcion para corroborar si hay caracteres en la caja de formulario
-  // y cambiar el estado de mi comentario
-  const changeContent = (e) => {
-    setComment((p) => ({...p, [e.target.name] : e.target.value  }))
- 
-  }
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const { isOpen : isOpenModalComment, 
-          onOpen : onOpenModalComment, 
-          onClose: onCloseModalComment } = useDisclosure()
+  const { isOpen : isOpenModalComment, onOpen : onOpenModalComment, onClose: onCloseModalComment } = useDisclosure()
 
   const { isOpen : isOpenModalLike, onOpen : onOpenModalLike, onClose :onCloseModalLike } = useDisclosure()  
-  // estado que captura el commentario de la publicacion que se este intentando edita/eliminar o reportar
+  // estado que captura el comentario de la publicacion que se este intentando edita/eliminar o reportar
   const [commentSelect, setCommentSelect]  = useState()
-  
 
-
+  const showModalComment = (comment) => {
+      onOpenModalComment()
+      console.log(comment.ownerComment._id);
+      setCommentSelect(comment)
+  }
+  const showModalOptionsPublication = () => onOpenModalOptions()
+  const showModalLikes = () => onOpenModalLike()
 
   return (
     <>
-      <Box border={'solid red 5px'} display={'flex'} flexDirection={'column'}
-        justifyContent={'center'}
-        alignItems={'center'}
-      >
-        <Card
-          direction={{ base: 'column', sm: 'row' }}
-          overflow='hidden'
-          variant='outline'
-          minH={'70vh'}
-          width={{base : '100%', md : '60%'}}
-          
-        >
-            <Image
-              objectFit='cover'
-              maxW={{ base: '100%', sm: '60%' }}
-              src={`http://localhost:3000${publication.file}`}
-              alt='Caffe Latte'
-            />
+        <PublicationMain publication={publication}
+          showModalOptionsPublication={showModalOptionsPublication}
+          showModalComment={showModalComment}
+          sendLike={sendLike}
+          showModalLikes={showModalLikes}
+          createComment={createComment}
+        />
 
-            <Stack border={'solid green 2px'} maxHeight={'70vh'} overflowY={'auto'} width={{base : '100%', md : '60%'}}>
+        {
+          isOpenModalComment && <ModalComment 
+          isOpenModalComment={isOpenModalComment} 
+          onCloseModalComment={onCloseModalComment}
+          commentSelect={commentSelect}
+          deleteComent={deleteComent}  
+          editComment={editComment}
+        />
+        }
+        {
+          isOpenModalLike && <ModalLikes
+          isOpen={isOpenModalLike}
+          onClose={onCloseModalLike}
+          idPublication={idpublication} 
+          />
+        } 
 
-              <CardBody border={'solid red 2px'}>
-                <Heading size='md' display={'flex'} justifyContent={'space-between'}>
-                  <Text>{publication?.ownerPublication?.username}</Text>
-                  <i onClick={onOpen} className="bi bi-three-dots"></i>  
-                  {/* esto solo aparecera cuando el usuario haga clik en el icono superior */}
-                  {
-                    isOpen && <ModalPublication isOpen = {isOpen} onClose={onClose} />
-                  }
-           
-                </Heading>
-
-                <Text py='2'>
-                  {publication?.ownerPublication?.username}: {publication.content}
-                </Text>
-                {
-                   publication?.comments?.length > 0 ?(
-                    publication.comments.map((comment) => (
-                        <Box border={'solid blue 2px'}   key={comment._id}>
-                            <Text> {comment.ownerComment.username}</Text>
-                            <Text>{comment.content}</Text> 
-                            {/* cuando el usuario clicke en este icono aparecera una ventana modal indicando que accion desea hacer */}
-                              <i onClick={() => {
-                                onOpenModalComment()
-                                console.log(comment.ownerComment._id);
-                                setCommentSelect(comment)
-                              }} className="bi bi-three-dots"></i>
-                              {
-                                isOpenModalComment && <ModalComment 
-                                  isOpenModalComment={isOpenModalComment} 
-                                  onCloseModalComment={onCloseModalComment}
-                                  commentSelect={commentSelect}
-                                  deleteComent={deleteComent}  
-                                  editComment={editComment}
-                                />
-                              } 
-                        </Box>
-                    
-                    ))
-                   ) 
-                   : <Text>no hay comentarios</Text>
-                }
-                
-                
-              </CardBody>
-
-              <CardFooter display={'flex'} flexDirection={'column'}   gap={'8px'} marginBottom={'30px'}>
-
-                  <Box display={'flex'} justifyContent={'center'} gap={'10px'}>
-                      <Button variant='ghost' onClick={() => sendLike(publication._id)}>
-                          {
-                            publication?.likes?.find(like => like.ownerLike === user.id)?  
-                            <i className="bi bi-x-circle-fill"></i> : <i className="bi bi-heart-fill"></i> 
-                          } 
-                      </Button>
-                      <Button variant='ghost'>
-                          <i className="bi bi-chat-fill"></i>
-                      </Button>
-                  </Box>
-                 
-
-                  <Box display={'flex'} justifyContent={'center'} gap={'10px'}>
-                    <Text onClick={onOpenModalLike}>{ publication?.likes?.length > 0
-                              ? `${publication.likes.length} me gusta` 
-                              : 'Sé el primero en indicar que te gusta' }
-                    </Text>
-                          {
-                            isOpenModalLike && <ModalLikes
-                            isOpen={isOpenModalLike}
-                            onClose={onCloseModalLike}
-                            idPublication={idpublication} 
-                            />
-                          } 
-                    <Text>
-                        {
-                          publication?.comments?.length > 0 ? `${publication.comments.length} comentarios` : 'se el primero en comentar'
-                        }
-                    </Text>
-                  </Box>
-
-                  <Box>
-                    <form action="" onSubmit={createComment}>
-                      <Input
-                          variant='flushed'   
-                          onChange={changeContent}  
-                          placeholder="agrega un comentario" 
-                          name="content" 
-                          value={comment.content}
-                          >             
-                      </Input>
-                        {
-                           comment.content.length > 0 && <Button type="submit">publicar</Button>
-                        }
-                    </form>
-                  </Box>
-
-              </CardFooter>
-
-            </Stack>
-
-        </Card>
-      </Box>
+        {
+          isOpenModalOptions && <ModalPublication isOpen = {isOpenModalOptions} onClose={onCloseModalOptions} />
+        }
     </>
   )
 

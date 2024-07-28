@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { Box, Button, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Textarea } from "@chakra-ui/react"
 import { usePublication } from "../../context/PublicationProvider"
 import { useFormFields } from "../../hooks/useFormFields"
 import { useAuth } from "../../context/AuthProvider"
@@ -19,37 +19,47 @@ export const ModalPublication = ({isOpen, onClose}) => {
   }
 
 
-
   return (
     <>
       <Modal isCentered closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay/>
         <ModalContent>
-          <ModalHeader textAlign={'center'} borderBottom={'solid black 1px'}></ModalHeader>
+          <ModalHeader textAlign={'center'} borderBottom={'solid black 1px'}>
+            Publication
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-                <div>
-                    {
-                      user.id == publication?.ownerPublication?._id ? (
-                        <>
-                            <Button onClick={() => deletePublicationHandler(publication._id)}>eliminar</Button>
-                            <Button onClick={() => setIsEditPublication(true)}>editar</Button> 
-                        </>
-                    ):      <Button>reportar</Button>
+              <Box>
+                  {
+                    !isEditPublication && (
+                      user.id == publication.ownerPublication._id ? 
+                      <Box display={'flex'} justifyContent={'space-around'}>
+                          <Button onClick={() => deletePublicationHandler(publication._id)} colorScheme='red'>
+                            eliminar
+                          </Button>
+                          <Button onClick={() => setIsEditPublication(true)} colorScheme='blue'>
+                            editar
+                          </Button> 
+                      </Box>
+                    : <Button colorScheme='orange'>reportar</Button>
+                    )
 
-                    }
-                    {
-                      isEditPublication && (
-                        <form  onSubmit={setEditPublication}>
-                          <textarea onChange={fieldsInputs} defaultValue={publication.content} name="content" id=""></textarea>
-                          <input onChange={fieldsInputs} name="file" type="file" />
-                          <input type="submit" /> 
-                        </form>
-                      )
-                    }
-                      
-
-                </div>
+                  }
+                    
+                  {
+                    isEditPublication && (
+                      <Box as="form"  onSubmit={setEditPublication}>
+                        <Input  onChange={fieldsInputs} name="file" type="file" />
+                        <Textarea onChange={fieldsInputs} 
+                            name="content" 
+                            placeholder="escribe una descripcion..." 
+                            defaultValue={publication.content}
+                        />         
+                        <Button marginLeft={'40%'} marginTop={2} type="submit">editar</Button>
+                      </Box>
+                    )
+                  }                    
+              </Box>
           </ModalBody>
         </ModalContent>
       </Modal>

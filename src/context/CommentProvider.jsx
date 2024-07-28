@@ -35,6 +35,10 @@ export const CommentProvider = ({children}) => {
 
   const createCommentHandler = async (id, fields) => { 
     console.log(id, fields);
+    if(fields.content.trim().length < 1) {
+      alert('inserta un comentario')
+      return
+    }
      try {
         const {data : {comment}} = await createComment(id, fields)
         console.log(comment);

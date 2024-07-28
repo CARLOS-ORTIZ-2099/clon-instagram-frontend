@@ -21,7 +21,7 @@ export const Sidebar = ({ onOpen, onPublicationOpen}) => {
             <Image w={'50%'} src={img}/>
         </Box>
 
-        <Box as="ul" border={'solid green 3px'} mt={'7rem'} h={{base:'7vh', lg:'60vh'}} display={'flex'} flexDirection={{base:'row', lg:'column'}}
+        <Box as="ul" border={'solid green 3px'} mt={'7rem'} h={{base:'6vh', lg:'60vh'}} display={'flex'} flexDirection={{base:'row', lg:'column'}}
         justifyContent={'space-around'} position={'fixed'} w={{base:'100%', lg:'350px'}} listStyleType={'none'} bg={{base:'gray', lg:'none'}}
         bottom={{base:'0', lg:'auto'}} alignItems={{base:'center', lg:'start'}}>
 

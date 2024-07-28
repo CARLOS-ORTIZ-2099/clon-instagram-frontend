@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react"
+import { Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Textarea } from "@chakra-ui/react"
 import { useAuth } from "../../context/AuthProvider"
 import { useState } from "react"
 import { useFormFields } from "../../hooks/useFormFields"
@@ -17,29 +17,40 @@ export const ModalComment = ({isOpenModalComment, onCloseModalComment, commentSe
       <Modal  isCentered closeOnOverlayClick={false} isOpen={isOpenModalComment} onClose={onCloseModalComment}>
         <ModalOverlay/>
         <ModalContent>
-          <ModalHeader textAlign={'center'} borderBottom={'solid black 1px'}></ModalHeader>
+          <ModalHeader textAlign={'center'} borderBottom={'solid black 1px'}>Comment</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-                 {
-                    user.id == commentSelect?.ownerComment?._id ?(
-                        <>
-                            <button onClick={() => setIsEditComment(true)}>editar</button>
-                            <button onClick={() => deleteComent(commentSelect?._id)}> eliminar</button>
-                        </>
-                    ) 
-                    : (<button>reportar</button>)
-                } 
 
-                    {
-                      isEditComment && (
-                        <form  onSubmit={(e) => editComment(e, commentSelect._id, fields)}>
-                          <textarea onChange={fieldsInputs} defaultValue={commentSelect.content} name="content" id=""></textarea>
-                          
-                          <input type="submit" /> 
-                        </form>
-                      )
-                    }
-        
+              {
+                !isEditComment && (
+                  user.id == commentSelect?.ownerComment?._id ? 
+                  <Box display={'flex'} justifyContent={'space-around'}>
+                      <Button onClick={() => deleteComent(commentSelect?._id)} colorScheme='red'>
+                        eliminar
+                      </Button>
+                      <Button onClick={() => setIsEditComment(true)} colorScheme='blue'>
+                        editar
+                      </Button> 
+                  </Box>
+                : <Button colorScheme='orange'>reportar</Button>
+                )
+
+              }
+
+              {
+                isEditComment && (
+                  <Box as="form"  onSubmit={(e) => editComment(e, commentSelect._id, fields)}>
+                    <Textarea onChange={fieldsInputs} 
+                      name="content"
+                      placeholder="escribe un comentario"
+                      defaultValue={commentSelect.content}   
+                    />         
+                    <Button marginLeft={'40%'} marginTop={2} type="submit">editar</Button>
+                  </Box>
+                )
+              }
+
+
           </ModalBody>
         </ModalContent>
       </Modal>

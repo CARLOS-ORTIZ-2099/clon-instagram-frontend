@@ -23,14 +23,14 @@ export const ModalCreatePublication = ({isPublicationOpen, onPublicationClose}) 
         <ModalCloseButton />
         <ModalBody pb={6}>
           <Box>   
-              <form onSubmit={sendData}>
+              <Box as="form" onSubmit={sendData}>
                   <Input onChange={fieldsInputs} name="file" type="file" />
-                  <Textarea onChange={fieldsInputs} name="content" id=""
+                  <Textarea onChange={fieldsInputs} name="content" 
                     placeholder="escribe una descripcion..."
                   />
                   
                   <Button marginLeft={'40%'} marginTop={2} type="submit">crear</Button>
-              </form>
+              </Box>
           </Box>
         </ModalBody>
       </ModalContent>

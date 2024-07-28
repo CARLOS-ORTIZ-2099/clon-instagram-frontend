@@ -1,11 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import { unFollowUser, createfollower, getFolloweds } from "../../api/follower";
 import { useAuth } from "../../context/AuthProvider";
 import { Avatar, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
-
-
 
 export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
 
@@ -62,8 +61,6 @@ export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
       profilehandler()
     }
 
-  if(loading)  return <h2>cargando...</h2>
-
   return (
     <>
       <Modal isCentered closeOnOverlayClick={false} isOpen={isOpen} onClose={() => closeModalFolloweds()}>
@@ -74,15 +71,14 @@ export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
           <ModalBody pb={6}>
               {
                 loading? <Text>cargando...</Text> : (
-                  <ul>
+                  <Box as="ul">
                     {
                       followeds.map(followed => (
-                        <Box key={followed._id} display={'flex'} marginTop={2}>
+                        <Box key={followed._id} display={'flex'} marginTop={2} gap={'1rem'} alignItems={'center'}>
                             <Box marginRight={2}>
                               <Link to={`/${followed.followedUser.username}`}>
                               <Avatar name={`${followed.followedUser.fullname}`}  /> 
-                              </Link>
-                              
+                              </Link>        
                             </Box>
 
                             <Box>
@@ -93,15 +89,19 @@ export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
                             </Box>  
                             {
                               followed.followedUser._id != user.id && 
-                              (!followed.followedUser.followers.includes(user.id))
-                              ? <Button onClick={() => followerHandler(followed.followedUser._id, false)}>seguir</Button>  
+                              (!followed.followedUser.followers.includes(user.id))? 
+                              <Button onClick={() => followerHandler(followed.followedUser._id, false)} size={'sm'}>
+                                  seguir
+                              </Button>  
                               : followed.followedUser._id != user.id ?
-                              <Button onClick={() => followerHandler(followed.followedUser._id, true)}>dejar de seguir</Button> : ''
+                              <Button onClick={() => followerHandler(followed.followedUser._id, true)} size={'sm'}>
+                                  dejar de seguir
+                              </Button> : null
                             }    
                         </Box>
                       ))
                     }
-                  </ul>
+                  </Box>
                 )
               } 
           </ModalBody>
@@ -110,6 +110,4 @@ export const ModalFolloweds = ({isOpen, onClose, id, profilehandler}) => {
     </>
    
   )
-
-
 }

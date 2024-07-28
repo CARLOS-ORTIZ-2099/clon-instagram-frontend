@@ -1,15 +1,14 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { getFollowers, unFollowUser, createfollower } from "../../api/follower";
 import { useAuth } from "../../context/AuthProvider";
 import { Avatar, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
 
 
-
 export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
 
-  /* const {id} = useParams()  */ 
   const [loading, setLoading] = useState(false)
   const [followers, setFollowers] = useState([])
   const {user} = useAuth()
@@ -59,8 +58,7 @@ export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
       profilehandler()
     }
 
-  if(loading)  return <h2>cargando...</h2>
-
+ 
   return (
     <>
       <Modal isCentered closeOnOverlayClick={false} isOpen={isOpen} onClose={() => closeModalFolloweds()}>
@@ -71,15 +69,14 @@ export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
           <ModalBody pb={6}>
               {
                 loading? <Text>cargando...</Text> : (
-                  <ul>
+                  <Box as="ul">
                     {
                       followers.map(follower => (
-                        <Box key={follower._id} display={'flex'} marginTop={2}>
+                        <Box key={follower._id} display={'flex'} marginTop={2} gap={'1rem'} alignItems={'center'}>
                             <Box marginRight={2}>
                               <Link to={`/${follower.followerUser.username}`}>
-                              <Avatar name={`${follower.followerUser.fullname}`}  /> 
-                              </Link>
-                              
+                                <Avatar name={`${follower.followerUser.fullname}`}  /> 
+                              </Link>    
                             </Box>
 
                             <Box>
@@ -90,15 +87,19 @@ export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
                             </Box>  
                             {
                               follower.followerUser._id != user.id && 
-                              (!follower.followerUser.followers.includes(user.id))
-                              ? <Button onClick={() => followerHandler(follower.followerUser._id, false)}>seguir</Button>  
+                              (!follower.followerUser.followers.includes(user.id))? 
+                              <Button onClick={() => followerHandler(follower.followerUser._id, false)} size={'sm'}>
+                                  seguir
+                              </Button>  
                               : follower.followerUser._id != user.id ?
-                              <Button onClick={() => followerHandler(follower.followerUser._id, true)}>dejar de seguir</Button> : ''
+                              <Button onClick={() => followerHandler(follower.followerUser._id, true)} size={'sm'}>
+                                  dejar de seguir
+                              </Button> : null
                             }    
                         </Box>
                       ))
                     }
-                  </ul>
+                  </Box>
                 )
               }  
           </ModalBody>
@@ -106,7 +107,5 @@ export const ModalFollowers = ({isOpen, onClose, id, profilehandler}) => {
       </Modal>
     </>
   )
-
-
 
 }
