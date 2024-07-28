@@ -6,16 +6,14 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { loginUser, logoutUser, registerUser, verifyToken } from "../api/auth"
 import { useNavigate } from "react-router-dom"
 
-
 export const AuthContext = createContext()  
 
 export const AuthProvider = ({children}) => {
 
-
   const [user, setUser] = useState(false) 
   const [loading, setLoading] = useState(true)
   const [isAunthenticated, setIsAunthenticated] = useState(false)
- /*  const [infoUser, setInfoUser] = useState(false) */
+  const [errors, setErrors] = useState(null)
 
   const navigate = useNavigate()
   
@@ -59,6 +57,7 @@ export const AuthProvider = ({children}) => {
       }
     }catch(error) {
       console.log(error);
+      setErrors(error.response.data.message)
     }
   }
 
@@ -72,6 +71,10 @@ export const AuthProvider = ({children}) => {
       setIsAunthenticated(true)
     }catch(error) {
       console.log(error);
+      setErrors([error.response.data.message])
+      setTimeout(() => {
+        setErrors(null)
+      }, 2000)
     }
   }
 
@@ -83,7 +86,6 @@ export const AuthProvider = ({children}) => {
         if(response.statusText === 'OK') {
           setUser(false)
           setIsAunthenticated(false)
-          /* setInfoUser(false) */
         }
       }catch(error) {
         console.log(error); 
@@ -92,8 +94,9 @@ export const AuthProvider = ({children}) => {
 
 
   const data = {setUser, user, loading, setLoading, 
-              isAunthenticated, setIsAunthenticated,
-              registerHandler, loginHandler, logoutHandler,
+        isAunthenticated, setIsAunthenticated,
+        registerHandler, loginHandler, logoutHandler,
+        errors, setErrors
   }
 
   return (
@@ -103,7 +106,6 @@ export const AuthProvider = ({children}) => {
   )
 
 }
-
 
 export const useAuth = () => {
   const contextShare =  useContext(AuthContext)

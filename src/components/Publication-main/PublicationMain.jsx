@@ -36,7 +36,7 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
 
                 <CardBody border={'solid red 2px'}>
                   <Heading size='md' display={'flex'} justifyContent={'space-between'}>
-                    <Link to={`/${publication?.ownerPublication?.username}`}>
+                    <Link to={`/profile/${publication?.ownerPublication?.username}`}>
                       <Text>{publication?.ownerPublication?.username}</Text>
                     </Link>
                     <FontAwesomeIcon icon={faEllipsis} onClick={showModalOptionsPublication}/>
@@ -51,7 +51,7 @@ export const PublicationMain = ({publication, showModalOptionsPublication,
                       publication.comments.map((comment) => (
                         <Box border={'solid blue 2px'} fontSize={'small'}  key={comment._id}>
                             <Avatar size={'sm'} name={comment.ownerComment.username}/>
-                            <Link to={`/${comment.ownerComment.username}`}>
+                            <Link to={`/profile/${comment.ownerComment.username}`}>
                               <Box as="span" fontWeight={'bold'}> {comment. ownerComment.username}</Box>
                             </Link >
                             <Text >{comment.content}</Text> 

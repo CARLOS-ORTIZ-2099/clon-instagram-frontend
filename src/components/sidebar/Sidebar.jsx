@@ -50,7 +50,7 @@ export const Sidebar = ({ onOpen, onPublicationOpen}) => {
             </Box>
 
             <Box as="li" ml={'10px'}>
-                <Link  to={`/${user.username}`}>
+                <Link  to={`/profile/${user.username}`}>
                     <FontAwesomeIcon icon={faUser} size="xl"/>
                     <Box as="span" display={{base:'none', lg:'inline'}} ml={'10px'}> perfil</Box>
                 </Link>

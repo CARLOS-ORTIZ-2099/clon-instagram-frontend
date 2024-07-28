@@ -12,11 +12,12 @@ import { AbsoluteCenter, Box, Button, Center, Divider, Image, Input, Text, VStac
 export const Login = () => {
 
   const {fields, fieldsInputs} = useFormFields()
-  const {loginHandler, isAunthenticated} = useAuth()
+  const {loginHandler, isAunthenticated, errors, setErrors} = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     if(isAunthenticated) navigate('/home')
+      setErrors(null)
   }, [isAunthenticated])
 
   const sendData = (e) => {
@@ -54,6 +55,7 @@ export const Login = () => {
                     </Box>
                   </Box>        
                   <Text fontSize={'small'} fontWeight={'bold'}>iniciar sesion con facebook</Text>
+                  {errors? errors.map((er, ind )=> <Text key={ind} color={'red'}>{er}</Text> ) :null}
               </Box>
 
               <Center p={'1rem'} mt={'10px'} fontSize={'small'} width={'100%'}boxShadow={{base : 'none', sm:'0px 4px 8px rgba(0, 0, 0, 0.2)'}}>

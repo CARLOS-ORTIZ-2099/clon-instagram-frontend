@@ -86,7 +86,7 @@ export const CardPublication = ({publication, onOpen, setIdPublication}) => {
               <Avatar name={`${publication?.ownerPublication?.username}`}  />
               <Box>
                 <Heading size='sm'> 
-                  <Link to={`/${publication.ownerPublication.username}`}>{publication.ownerPublication.username}</Link> 
+                  <Link to={`/profile/${publication.ownerPublication.username}`}>{publication.ownerPublication.username}</Link> 
                 </Heading>
                 <Text>Creator, Chakra UI</Text>
               </Box>

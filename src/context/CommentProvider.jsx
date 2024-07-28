@@ -58,8 +58,6 @@ export const CommentProvider = ({children}) => {
   }  
 
   
- 
-
   const editCommentHandler = async (id, fields) => {
       try{
         const response = await editComment(id, fields) 

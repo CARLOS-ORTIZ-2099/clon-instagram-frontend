@@ -36,7 +36,7 @@ function App() {
                 <Route element={<ProtectedRoutes/>}>
 
                   <Route path='/home' element={<Home/>}/>
-                  <Route path='/:username' element={<Profile/>}/>
+                  <Route path='/profile/:username' element={<Profile/>}/>
                   <Route path='/:username/:id/followers' element={<ModalFollowers/>}/>
                   <Route path='/:username/:id/following' element={<ModalFolloweds/>}/>
                   <Route path='/p/:idpublication' element={<Publication/>}/>
