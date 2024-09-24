@@ -1,9 +1,8 @@
-import axios from "axios"
+import axios from "axios";
 
-export const instance = axios.create(
-    { 
-        baseURL : 'http://localhost:3000/api',
-        withCredentials: true
-    
-    }
-)
+/* Con withCredentials: true, Axios garantiza que cualquier cookie que el servidor establezca (por ejemplo, después de un inicio de sesión exitoso) se incluya en las solicitudes subsiguientes hechas con esta instancia. Esto es necesario para que el servidor pueda identificar y autenticar al usuario en futuras solicitudes. */
+
+export const instance = axios.create({
+  baseURL: "http://localhost:5000/api",
+  withCredentials: true,
+});

@@ -1,142 +1,202 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useParams } from "react-router-dom"
-import { usePublication } from "../../context/PublicationProvider";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ModalPublication } from "../../components/modal-publication/ModalPublication";
 import { useAuth } from "../../context/AuthProvider";
-import { useComment } from "../../context/CommentProvider";
 import { likePublication } from "../../api/likePublication";
 import { ModalLikes } from "../../components/modal-likes/ModalLikes";
 import { useDisclosure } from "@chakra-ui/react";
 import { ModalComment } from "../../components/modal-comment/ModalComment";
 import { PublicationMain } from "../../components/Publication-main/PublicationMain";
-
+import { getPublication } from "../../api/publication";
+import { createComment, deletecomment, editComment } from "../../api/comment";
+import { useCallback } from "react";
 
 export const Publication = () => {
-
-  const {idpublication} = useParams()
-  const {getPublicationHandler, publication, setPublication, publications, setPublications} = usePublication()
-  const {user} = useAuth()  
-  const {deleteCommentHandler, editCommentHandler, createCommentHandler} = useComment() 
-
-
-const createComment = (e, comment) => {
-    e.preventDefault()
-    try {
-      createCommentHandler(idpublication, {content:comment})
-      e.target.reset()
-    }catch(error) {
-        console.log(error);
-    }
-}
-
-const editComment = (e, id, fields) => {
-  e.preventDefault()
-  try{
-    editCommentHandler(id, fields)
-    onCloseModalComment()
-  }catch(error) {
-    console.log(error);
-  }
-}
-
-const deleteComent = (id) => {
-    deleteCommentHandler(id)
-    onCloseModalComment()
-} 
-
+  const { idpublication } = useParams();
+  const { user } = useAuth();
+  // estado que captura el comentario de la publicacion que se este intentando edita/eliminar o reportar
+  const [publication, setPublication] = useState({});
 
   useEffect(() => {
-    getPublicationHandler(idpublication) 
-    console.log(publication);
-  },[])
+    getPublicationHandler(idpublication);
+    //console.log(publication);
+  }, []);
+  // funcion para obtener la informacion de una publicacion en especifico
+  const getPublicationHandler = async (id) => {
+    try {
+      const response = await getPublication(id);
+      console.log(response);
+      setPublication(response.data.response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // funcion para crear comentario
+  const createCommentHandler = async (e, comment) => {
+    e.preventDefault();
+    if (comment.trim().length < 1) {
+      alert("inserta un comentario");
+      return;
+    }
+    try {
+      const response = await createComment(idpublication, {
+        content: comment,
+        username: user.username,
+      });
+      console.log(response);
+      console.log(publication);
+      setPublication((previous) => ({
+        ...previous,
+        comments: [...previous.comments, response.data],
+      }));
+      e.target.reset();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // funcion para dar like o deslike
+  const sendLike = async (id, boolean) => {
+    console.log(id, boolean);
+    // eliminar like
+    if (boolean) {
+      const updateLikes = publication.likes.filter(
+        (like) => like._id !== user._id
+      );
+      handlerLike(id, { action: "eliminar" });
+      setPublication({ ...publication, likes: updateLikes });
+    }
+    // crear like
+    else {
+      const updateLikes = [...publication.likes, { ...user }];
+      handlerLike(id, { action: "crear" });
+      setPublication({ ...publication, likes: updateLikes });
+    }
+  };
+  async function petition(id, action) {
+    const response = await likePublication(id, action);
+    console.log(response);
+  }
+  const handlerLike = useCallback(debounce(petition, 500), []);
 
-  
-  // funcion para dar like o deslike  
-  const sendLike = async(id) => {
-      try {
-        const response = await likePublication(id)
-      /*   console.log(response);
-        console.log(publication);
-        console.log(publications);
-        console.log(id); */
-        if(response.status === 204) {
-          // se borro like, deberiamos borrar el like de nuestro estado publication
-          const updateLikes = publication.likes.filter((like) => like.ownerLike != user.id)
-          setPublication({...publication, likes : updateLikes})
-          // tambien debo modificar mi estado de publicaciones oara que este se actualize en el home con las cantidad de likes mas recientes
+  function debounce(cb, delay) {
+    let time;
 
-          const publicationUpdate = publications.map((pb) => pb._id === id 
-          ? {...pb, likes : pb.likes.filter((like) => like.ownerLike != user.id)} 
-          : pb
-          )
-          setPublications(publicationUpdate)
-
-
-        }else if(response.status === 201) {
-          // se creo el like, deberiamos insertar el like en nuestro estado publications
-          const updateLikes = [...publication.likes, response.data.like]
-          setPublication({...publication, likes : updateLikes})
-
-          const publicationUpdate = publications.map((pb) => pb._id === id 
-          ? {...pb, likes : [...pb.likes, response.data.like]} 
-          : pb
-          )
-          setPublications(publicationUpdate)
-        }
-        
-      }catch(error) {
-        console.log(error);
-      }
+    return (identificador, action) => {
+      clearTimeout(time);
+      time = setTimeout(() => {
+        cb(identificador, action);
+      }, delay);
+    };
   }
 
-  const { isOpen : isOpenModalOptions, onOpen : onOpenModalOptions, onClose : onCloseModalOptions } = useDisclosure()
+  // hook para controlar el estado del modal de los likes
+  const {
+    isOpen: isOpenModalLike,
+    onOpen: onOpenModalLike,
+    onClose: onCloseModalLike,
+  } = useDisclosure();
 
-  const { isOpen : isOpenModalComment, onOpen : onOpenModalComment, onClose: onCloseModalComment } = useDisclosure()
+  const showModalLikes = () => onOpenModalLike();
 
-  const { isOpen : isOpenModalLike, onOpen : onOpenModalLike, onClose :onCloseModalLike } = useDisclosure()  
-  // estado que captura el comentario de la publicacion que se este intentando edita/eliminar o reportar
-  const [commentSelect, setCommentSelect]  = useState()
+  // hook para controlar los estados del modal de editar/eliminar publicacion
+  const {
+    isOpen: isOpenModalOptions,
+    onOpen: onOpenModalOptions,
+    onClose: onCloseModalOptions,
+  } = useDisclosure();
+  // esta funcion abrira el modal para las opciones de editar y/o eliminar publicacion
+  const showModalOptionsPublication = () => onOpenModalOptions();
 
+  // hooks para controlar los estados del modal de editar/eliminar comentario
+  const [commentSelect, setCommentSelect] = useState();
+  const {
+    isOpen: isOpenModalComment,
+    onOpen: onOpenModalComment,
+    onClose: onCloseModalComment,
+  } = useDisclosure();
+  // esta funcion abrira el modal para las opciones de editar y/o eliminar comentario
   const showModalComment = (comment) => {
-      onOpenModalComment()
-      console.log(comment.ownerComment._id);
-      setCommentSelect(comment)
-  }
-  const showModalOptionsPublication = () => onOpenModalOptions()
-  const showModalLikes = () => onOpenModalLike()
+    console.log(comment);
+    onOpenModalComment();
+    console.log(comment.ownerComment._id);
+    setCommentSelect(comment);
+  };
+  // funcion para eliminar comentario
+  const deleteCommentHandler = async (idComment) => {
+    console.log(idComment, publication._id);
+    try {
+      const response = await deletecomment(publication._id, idComment);
+      console.log(response);
+
+      const updateComments = publication.comments.filter(
+        (comment) => comment._id != response.data
+      );
+      setPublication({ ...publication, comments: updateComments });
+
+      onCloseModalComment();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editCommentHandler = async (e, idComment, data) => {
+    e.preventDefault();
+    //console.log(e, idComment, data);
+    try {
+      // recibe el id de la publicacion el id del comentario a editar y el valor a editar
+      const response = await editComment(publication._id, idComment, {
+        content: data,
+      });
+      console.log(response);
+      console.log(publication);
+      const editComments = publication.comments.map((comment) =>
+        comment._id === idComment
+          ? { ...comment, content: response.data.comment.content }
+          : comment
+      );
+      setPublication({ ...publication, comments: editComments });
+      onCloseModalComment();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
-        <PublicationMain publication={publication}
-          showModalOptionsPublication={showModalOptionsPublication}
-          showModalComment={showModalComment}
-          sendLike={sendLike}
-          showModalLikes={showModalLikes}
-          createComment={createComment}
+      <PublicationMain
+        publication={publication}
+        createComment={createCommentHandler}
+        sendLike={sendLike}
+        showModalOptionsPublication={showModalOptionsPublication}
+        showModalComment={showModalComment}
+        showModalLikes={showModalLikes}
+      />
+      {isOpenModalOptions && (
+        <ModalPublication
+          isOpen={isOpenModalOptions}
+          onClose={onCloseModalOptions}
+          publication={publication}
+          setPublication={setPublication}
         />
+      )}
 
-        {
-          isOpenModalComment && <ModalComment 
-          isOpenModalComment={isOpenModalComment} 
+      {isOpenModalComment && (
+        <ModalComment
+          isOpenModalComment={isOpenModalComment}
           onCloseModalComment={onCloseModalComment}
           commentSelect={commentSelect}
-          deleteComent={deleteComent}  
-          editComment={editComment}
+          deleteComent={deleteCommentHandler}
+          editComment={editCommentHandler}
         />
-        }
-        {
-          isOpenModalLike && <ModalLikes
+      )}
+      {isOpenModalLike && (
+        <ModalLikes
           isOpen={isOpenModalLike}
           onClose={onCloseModalLike}
-          idPublication={idpublication} 
-          />
-        } 
-
-        {
-          isOpenModalOptions && <ModalPublication isOpen = {isOpenModalOptions} onClose={onCloseModalOptions} />
-        }
+          idPublication={idpublication}
+        />
+      )}
     </>
-  )
-
-}
+  );
+};
