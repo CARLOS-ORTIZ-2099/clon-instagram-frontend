@@ -65,7 +65,10 @@ export const ModalFolloweds = ({ isOpen, onClose, idQuery }) => {
                   >
                     <Box marginRight={2}>
                       <Link to={`/profile/${followed.followedUser.username}`}>
-                        <Avatar name={`${followed.followedUser.fullname}`} />
+                        <Avatar
+                          name={`${followed.followedUser.fullname}`}
+                          src={followed.followedUser?.avatar?.secure_url}
+                        />
                       </Link>
                     </Box>
 

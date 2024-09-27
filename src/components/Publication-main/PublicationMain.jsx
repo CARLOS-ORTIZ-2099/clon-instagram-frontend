@@ -30,6 +30,31 @@ export const PublicationMain = ({
   showModalLikes,
 }) => {
   const { user } = useAuth();
+  console.log(publication);
+
+  function buttonLike() {
+    return publication?.likes?.find((lk) => lk?._id === user._id) ? (
+      <Button
+        variant="ghost"
+        mt={"10"}
+        onClick={() => sendLike(publication._id, true)}
+      >
+        <FontAwesomeIcon
+          icon={faHeart}
+          style={{ color: "#ef1f1f" }}
+          size="xl"
+        />
+      </Button>
+    ) : (
+      <Button
+        variant="ghost"
+        mt={"10"}
+        onClick={() => sendLike(publication._id, false)}
+      >
+        <FontAwesomeIcon icon={whiteHeart} size="xl" />
+      </Button>
+    );
+  }
 
   return (
     <>
@@ -85,6 +110,7 @@ export const PublicationMain = ({
                     <Avatar
                       size={"sm"}
                       name={comment.ownerComment.username || user.username}
+                      src={comment.ownerComment?.avatar?.secure_url}
                     />
                     <Link
                       to={`/profile/${
@@ -113,26 +139,12 @@ export const PublicationMain = ({
               marginBottom={"30px"}
             >
               <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-                <Button variant="ghost">
-                  {publication?.likes?.find((like) => like._id === user._id) ? (
-                    <FontAwesomeIcon
-                      onClick={() => sendLike(publication._id, true)}
-                      icon={faHeart}
-                      style={{ color: "#ef1f1f" }}
-                      size="xl"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      onClick={() => sendLike(publication._id, false)}
-                      icon={whiteHeart}
-                      size="xl"
-                    />
-                  )}
-                </Button>
-                <Button variant="ghost">
+                {buttonLike()}
+                <Button mt={"10"} variant="ghost">
                   <FontAwesomeIcon icon={faComment} size="xl" />
                 </Button>
               </Box>
+
               <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
                 <Text onClick={showModalLikes} cursor={"pointer"}>
                   {publication?.likes?.length > 0

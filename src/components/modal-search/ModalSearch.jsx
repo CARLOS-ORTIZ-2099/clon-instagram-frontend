@@ -73,7 +73,10 @@ export const ModalSearch = ({ isOpen, onClose }) => {
                   <Box key={user._id} display={"flex"} marginTop={2}>
                     <Box marginRight={2}>
                       <Link to={"/profile/" + user.username}>
-                        <Avatar name={`${user.fullname}`} />
+                        <Avatar
+                          name={`${user.username}`}
+                          src={user?.avatar?.secure_url}
+                        />
                       </Link>
                     </Box>
                     <Box>
@@ -83,7 +86,6 @@ export const ModalSearch = ({ isOpen, onClose }) => {
                         </Link>
                       </Text>
                       <span>{user.fullname} </span>
-                      {/* <span> seguidores : {user.followers.length}</span> */}
                     </Box>
                   </Box>
                 ))

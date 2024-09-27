@@ -2,7 +2,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
-
 import { getLikePublication } from "../../api/likePublication";
 import { Link } from "react-router-dom";
 import {
@@ -61,7 +60,10 @@ export const ModalLikes = ({ isOpen, onClose, idPublication }) => {
                   <Box key={like._id} display={"flex"} marginTop={2}>
                     <Box marginRight={2}>
                       <Link to={`/profile/${like.username}`}>
-                        <Avatar name={`${like.fullname}`} />
+                        <Avatar
+                          name={`${like.fullname}`}
+                          src={like?.avatar?.secure_url}
+                        />
                       </Link>
                     </Box>
                     <Box>

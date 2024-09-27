@@ -18,34 +18,21 @@ import { useAuth } from "../../context/AuthProvider";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
-import { deletePublication, editPublication } from "../../api/publication";
+import { deletePublication } from "../../api/publication";
 import { useNavigate } from "react-router-dom";
+import { useUploadPhoto } from "../../hooks/useUploadPhoto";
 
 export const ModalPublication = ({
   isOpen,
   onClose,
   publication,
-  setPublication,
+  editPublicationHandler,
 }) => {
   const { user } = useAuth();
   const [isEditPublication, setIsEditPublication] = useState(false);
-  const [image, setImage] = useState({ file: "", result: "" });
-  const navigate = useNavigate();
-  const uploadPhoto = (e) => {
-    // creando la instancia del lector
-    const reader = new FileReader();
-    // capturando el archivo
-    const file = e.target.files[0];
-    console.log(file);
+  const { image, uploadPhoto } = useUploadPhoto();
 
-    // leyendo el archivo
-    reader.readAsDataURL(file);
-    // evento que se ejecuta cuando se termine de leer dicho archivo
-    reader.addEventListener("load", (evt) => {
-      //console.log(evt.target.result);
-      setImage({ file, result: evt.target.result });
-    });
-  };
+  const navigate = useNavigate();
 
   const setEditPublication = (e) => {
     e.preventDefault();
@@ -54,23 +41,6 @@ export const ModalPublication = ({
     image.file && newFormaData.append("file", image.file);
     console.log(Object.fromEntries(newFormaData));
     editPublicationHandler(publication._id, newFormaData);
-  };
-  const editPublicationHandler = async (id, fields) => {
-    try {
-      const {
-        data: { body },
-      } = await editPublication(id, fields);
-      console.log(body);
-      // modificar la publicacion que se edito
-      setPublication((pr) => ({
-        ...pr,
-        content: body.content,
-        file: body.file,
-      }));
-      onClose();
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const deletePublicationHandler = async (id) => {

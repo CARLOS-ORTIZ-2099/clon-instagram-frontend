@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-
 import {
   Box,
   Button,
@@ -13,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../../context/AuthProvider";
 import { useState } from "react";
-import { useFormFields } from "../../hooks/useFormFields";
 
 export const ModalComment = ({
   isOpenModalComment,
@@ -24,7 +22,6 @@ export const ModalComment = ({
 }) => {
   const { user } = useAuth();
   const [isEditComment, setIsEditComment] = useState(false);
-  /*   const { fields, handlerChange } = useFormFields(); */
 
   return (
     <>

@@ -6,6 +6,7 @@ import { ModalSearch } from "../modal-search/ModalSearch";
 import { ModalCreatePublication } from "../modal-create-publication/ModalCreatePublication";
 import { Grid, useDisclosure } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { Loading } from "../Loading";
 
 export const ProtectedRoutes = () => {
   const { user, loading, isAunthenticated } = useAuth();
@@ -16,21 +17,20 @@ export const ProtectedRoutes = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   // modal para crear publicaciones
   const {
-    isOpen: isPublicationOpen,
-    onOpen: onPublicationOpen,
-    onClose: onPublicationClose,
+    isOpen: isOpenCreate,
+    onOpen: onOpenCreate,
+    onClose: onCloseCreate,
   } = useDisclosure();
   // este efecto se ejecutara cuando location(hook con info de la navegacion) cambie
   // este hook detecta los cambio que surgen a nivel de url
   useEffect(() => {
-    console.log(isOpen);
+    // aqui comprobamos si el modal del busqueda esta abierto esto con el find e que cunado el usuario se diriga al perfil de algun usuario buscado el modal se cierre
     if (isOpen) {
-      console.log("ejecutando close modal de buscar usuarios");
       onClose();
     }
   }, [location]);
 
-  if (loading) return <h1>...</h1>;
+  if (loading) return <Loading />;
 
   if (!user && !isAunthenticated) return <Navigate to="/login" replace />;
 
@@ -40,14 +40,14 @@ export const ProtectedRoutes = () => {
       templateColumns={{ base: "1fr", lg: "350px 1fr" }}
       minHeight={"100vh"}
     >
-      <Sidebar onOpen={onOpen} onPublicationOpen={onPublicationOpen} />
+      <Sidebar onOpen={onOpen} onOpenCreate={onOpenCreate} />
 
       {isOpen && <ModalSearch isOpen={isOpen} onClose={onClose} />}
 
-      {isPublicationOpen && (
+      {isOpenCreate && (
         <ModalCreatePublication
-          isPublicationOpen={isPublicationOpen}
-          onPublicationClose={onPublicationClose}
+          isOpenCreate={isOpenCreate}
+          onCloseCreate={onCloseCreate}
         />
       )}
       <Outlet />

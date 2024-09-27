@@ -25,6 +25,7 @@ export const ProfileCard = ({
       <Box /* border={'solid orange 3px'} */ flex={"1 1 0"}>
         <Avatar
           name={infoUser.user.username}
+          src={infoUser.user.avatar?.secure_url}
           size={{ base: "xl", md: "2xl" }}
         />
       </Box>
@@ -65,7 +66,7 @@ export const ProfileCard = ({
             )
           ) : (
             <Button size={"sm"} ml={"15px"}>
-              editar perfil
+              <Link to={`/edit-profile/${user._id}`}>editar perfil</Link>
             </Button>
           )}
         </Box>
@@ -93,7 +94,7 @@ export const ProfileCard = ({
           sx={{ "& > *": { marginLeft: { base: "0", md: "15px" } } }}
         >
           <Text>{infoUser.user.fullname}</Text>
-          <Text>sin descripcion</Text>
+          <Text>{infoUser.user.bio || "sin descripcion"} </Text>
         </Box>
       </VStack>
     </Box>

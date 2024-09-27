@@ -5,6 +5,7 @@ import { instance } from "../libs/axiosConfig";
 // axios tiene el beneficio que tampoco hace falta indicar el tipo de dato si lo que le enviamos
 // es un json, axios lo detecta automaticamente
 
+// el parametro page indica cuantas paginas(documentos) tendra que saltarse la consulta
 export const getPublications = (page = 0) =>
   instance.get("/publication/get-publications?page=" + page);
 

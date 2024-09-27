@@ -2,12 +2,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getFollowers, unFollowUser, createfollower } from "../../api/follower";
-import { useAuth } from "../../context/AuthProvider";
+import { getFollowers } from "../../api/follower";
+
 import {
   Avatar,
   Box,
-  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -67,7 +66,10 @@ export const ModalFollowers = ({ isOpen, onClose, idQuery }) => {
                   >
                     <Box marginRight={2}>
                       <Link to={`/profile/${follower.followerUser.username}`}>
-                        <Avatar name={`${follower.followerUser.fullname}`} />
+                        <Avatar
+                          name={`${follower.followerUser.fullname}`}
+                          src={follower.followerUser?.avatar?.secure_url}
+                        />
                       </Link>
                     </Box>
 

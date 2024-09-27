@@ -16,56 +16,51 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import { createPublication } from "../../api/publication";
+import { useUploadPhoto } from "../../hooks/useUploadPhoto";
+import { useState } from "react";
 
-export const ModalCreatePublication = ({
-  isPublicationOpen,
-  onPublicationClose,
-}) => {
-  const [image, setImage] = useState({ file: "", result: "" });
+export const ModalCreatePublication = ({ isOpenCreate, onCloseCreate }) => {
+  const { image, uploadPhoto } = useUploadPhoto();
+  const [loading, setLoading] = useState(false);
 
   const sendData = async (e) => {
     e.preventDefault();
     if (!image.file) {
-      return alert("la imagen es obligatorio");
+      return alert("la imagen es obligatoria");
     }
     const formData = new FormData();
-    formData.append("file", image.file);
     formData.append("content", e.target.content.value);
-    console.log(Object.fromEntries(formData));
+    formData.append("file", image.file);
+    //console.log(Object.fromEntries(formData));
+    createPublicationHandler(formData);
+  };
+  const createPublicationHandler = async (formData) => {
+    setLoading(true);
     try {
       const response = await createPublication(formData);
       console.log(response);
-      onPublicationClose();
+      alert("se creo correctamente");
+      onCloseCreate();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const uploadPhoto = (e) => {
-    const reader = new FileReader();
-    const file = e.target.files[0];
-    console.log(file);
-    reader.readAsDataURL(file);
-    reader.addEventListener("load", (evt) => {
-      setImage({ file, result: evt.target.result });
-    });
-  };
-
   return (
     <Modal
       isCentered
       closeOnOverlayClick={false}
-      isOpen={isPublicationOpen}
-      onClose={onPublicationClose}
+      isOpen={isOpenCreate}
+      onClose={onCloseCreate}
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textAlign={"center"} borderBottom={"solid black 1px"}>
           Crea una nueva publicación
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton isDisabled={loading} />
         <ModalBody pb={6}>
           <Box>
             <Box as="form" onSubmit={sendData}>
@@ -76,7 +71,6 @@ export const ModalCreatePublication = ({
                   <Input
                     type="file"
                     name="file"
-                    multiple
                     onChange={uploadPhoto}
                     display="none"
                   />
@@ -91,7 +85,12 @@ export const ModalCreatePublication = ({
                 name="content"
                 placeholder="escribe una descripcion..."
               />
-              <Button marginLeft={"40%"} marginTop={2} type="submit">
+              <Button
+                isLoading={loading}
+                marginLeft={"40%"}
+                marginTop={2}
+                type="submit"
+              >
                 crear
               </Button>
             </Box>

@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { createfollower, unFollowUser } from "../../api/follower";
 import { profileUser } from "../../api/auth";
-import { Box, Spinner, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Text, useDisclosure } from "@chakra-ui/react";
 import { ModalFolloweds } from "../../components/modal-followeds/ModalFolloweds";
 import { ModalFollowers } from "../../components/modal-followers.jsx/ModalFollowers";
 import { ProfileCard } from "../../components/profile-card/ProfileCard";
 import { ImagesContainer } from "../../components/grid-images-container/ImagesContainer";
 import { PublicationImage } from "../../components/publication-image/PublicationImage";
+import { Loading } from "../../components/Loading";
 
 export const Profile = () => {
   const { username } = useParams();
@@ -72,17 +73,7 @@ export const Profile = () => {
     onClose: onCloseModalFollowers,
   } = useDisclosure();
 
-  if (!infoUser.user)
-    return (
-      <Spinner
-        m={"0 auto"}
-        thickness="4px"
-        speed="0.65s"
-        emptyColor="gray.200"
-        color="blue.500"
-        size="xl"
-      />
-    );
+  if (!infoUser.user) return <Loading />;
 
   return (
     <Box>

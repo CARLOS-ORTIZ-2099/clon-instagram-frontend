@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
+import { Loading } from "../Loading";
 
 export const PublicRoutes = () => {
   const { user, loading, isAunthenticated } = useAuth();
 
   //console.log(user, loading, isAunthenticated);
   if (loading) {
-    return <h1>...cargando</h1>;
+    return <Loading />;
   }
 
   if (user && isAunthenticated) {

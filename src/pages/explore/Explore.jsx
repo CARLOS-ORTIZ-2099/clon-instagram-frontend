@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getPublicationsRandom } from "../../api/publication";
-import { Box, Spinner, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { ImagesContainer } from "../../components/grid-images-container/ImagesContainer";
 import { PublicationImage } from "../../components/publication-image/PublicationImage";
+import { Loading } from "../../components/Loading";
 
 export const Explore = () => {
   const [publicationsRandom, setPublicationsRandom] = useState([]);
@@ -19,17 +20,7 @@ export const Explore = () => {
     setPublicationsRandom(publications);
   };
 
-  if (publicationsRandom.length < 1)
-    return (
-      <Spinner
-        m={"0 auto"}
-        thickness="4px"
-        speed="0.65s"
-        emptyColor="gray.200"
-        color="blue.500"
-        size="xl"
-      />
-    );
+  if (publicationsRandom.length < 1) return <Loading />;
 
   return (
     <Box mt={"30px"} textAlign={"center"}>

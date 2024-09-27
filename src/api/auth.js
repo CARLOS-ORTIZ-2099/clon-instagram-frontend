@@ -10,7 +10,9 @@ export const verifyToken = () => instance.get("/auth/verifyToken");
 
 export const logoutUser = () => instance.get("/auth/logout");
 
-/* falta probar */
+export const editprofile = (data, id) =>
+  instance.put("/auth/edit-profile/" + id, data);
+
 export const profileUser = (username) =>
   instance.get("/auth/profile/" + username);
 
