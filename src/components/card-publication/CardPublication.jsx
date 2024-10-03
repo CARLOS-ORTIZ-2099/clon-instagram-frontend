@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import {
@@ -17,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
-import { likePublication } from "../../api/likePublication";
 import { createComment } from "../../api/comment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -26,77 +26,47 @@ import {
   faComment,
   faPaperPlane,
 } from "@fortawesome/free-regular-svg-icons";
-import { useCallback } from "react";
 import { useButtonsActive } from "../../hooks/useButtonsActive.js";
-import { debounce } from "../../libs/debounce.js";
+import { useState } from "react";
+import { useLikes } from "../../hooks/useLikes.js";
 
-export const CardPublication = ({
-  publication,
-  setPublications,
-  publications,
-}) => {
+export const CardPublication = ({ publication }) => {
   const { user } = useAuth();
   const { cleanButtons, handlerComment, buttonsActive } = useButtonsActive();
+
+  // recalcar que aunque el estado de publicaciones cambie cuando se haga scroll y la publicacion se vuelva a renderizar nuestro estado de likes no se vuelve a inicializar con ese mismo valor, ya que cuando usamos una prop para inicializar un estado, aunque el estado cambie la inicializacion solo ocurre una vez
+  const { likes, sendLike } = useLikes(publication);
+  const [comments, setComments] = useState(publication.comments);
 
   const createCommentHandler = async (e, id) => {
     e.preventDefault();
     try {
-      const comments = await createComment(id, {
+      const comment = await createComment(id, {
         content: e.target.content.value,
       });
       cleanButtons();
-      const updateComment = publications.map((publication) =>
-        publication._id === id
-          ? {
-              ...publication,
-              comments: [...publication.comments, comments.data],
-            }
-          : publication
-      );
-      setPublications(updateComment);
+      setComments([...comments, comment.data]);
       e.target.reset();
     } catch (error) {
       console.log(error);
     }
   };
-
-  // aqui el servidor no va hacer nada hasta que no reciba una solicitud del cliente
-  const sendLike = async (id, boolean) => {
-    //console.log(id, boolean);
-    // eliminar like
-    if (boolean) {
-      const updateLikes = publications.map((p) =>
-        p._id === id
-          ? {
-              ...p,
-              likes: p.likes.filter((like) => like != user._id),
-            }
-          : p
-      );
-      handlerLike(id, { action: "eliminar" }); // ejecutar timer
-      setPublications(updateLikes); // => pero mientras se ejecuta el estado local ya se habra actualizado
-    }
-    // crear like
-    else {
-      const updateLikes = publications.map((p) =>
-        p._id === id
-          ? {
-              ...p,
-              likes: [...p.likes, user._id],
-            }
-          : p
-      );
-      handlerLike(id, { action: "crear" }); // ejecutar timer
-      setPublications(updateLikes); // => pero mientras se ejecuta el estado local ya se habra actualizado
-    }
-  };
-
-  async function petition(id, action) {
-    const response = await likePublication(id, action);
-    console.log(response);
+  function buttonLike() {
+    return likes?.find((lk) => lk === user._id) ? (
+      <Button variant="ghost" onClick={() => sendLike(publication._id, true)}>
+        <FontAwesomeIcon
+          icon={faHeart}
+          style={{ color: "#ef1f1f" }}
+          size="xl"
+        />
+      </Button>
+    ) : (
+      <Button variant="ghost" onClick={() => sendLike(publication._id, false)}>
+        <FontAwesomeIcon icon={whiteHeart} size="xl" />
+      </Button>
+    );
   }
-  const handlerLike = useCallback(debounce(petition, 500), []);
-  // console.log(publication);
+
   return (
     <Card maxW="md">
       <CardHeader>
@@ -131,32 +101,12 @@ export const CardPublication = ({
 
       <CardBody p={0}>
         <Box>
-          <Button
-            variant="ghost"
-            leftIcon={
-              publication.likes.find((like) => like === user._id) ? (
-                <FontAwesomeIcon
-                  onClick={() => sendLike(publication._id, true)}
-                  icon={faHeart}
-                  style={{ color: "#ef1f1f" }}
-                  size="xl"
-                />
-              ) : (
-                <FontAwesomeIcon
-                  onClick={() => sendLike(publication._id, false)}
-                  icon={whiteHeart}
-                  size="xl"
-                />
-              )
-            }
-          ></Button>
-
+          {buttonLike()}
           <Button variant="ghost">
             <Link to={"/p/" + publication._id}>
               <FontAwesomeIcon icon={faComment} size="xl" />{" "}
             </Link>
           </Button>
-
           <Button
             variant="ghost"
             leftIcon={
@@ -165,7 +115,7 @@ export const CardPublication = ({
           ></Button>
         </Box>
 
-        <Text ml={"16px"}>{publication.likes.length} Me gusta </Text>
+        <Text ml={"16px"}>{likes.length} Me gusta </Text>
       </CardBody>
 
       <CardFooter display={"flex"} flexDirection={"column"}>
@@ -174,11 +124,11 @@ export const CardPublication = ({
           {publication.content}
         </Text>
         <Box>
-          {publication.comments.length < 1 ? (
+          {comments.length < 1 ? (
             <Text>se el primero en comentar</Text>
           ) : (
             <Link to={"/p/" + publication._id}>
-              ver los {publication.comments.length} comentarios
+              ver los {comments.length} comentarios
             </Link>
           )}
         </Box>

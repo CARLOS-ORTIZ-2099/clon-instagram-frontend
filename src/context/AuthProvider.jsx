@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await registerUser(fields);
       if (response.statusText === "OK") {
+        alert("registrado satisfactoriamente");
         navigate("/login");
       }
     } catch (error) {

@@ -6,7 +6,6 @@ import { ModalLikes } from "../../components/modal-likes/ModalLikes";
 import { useDisclosure } from "@chakra-ui/react";
 import { ModalComment } from "../../components/modal-comment/ModalComment";
 import { PublicationMain } from "../../components/Publication-main/PublicationMain";
-
 import { usePublication } from "../../hooks/usePublication";
 
 export const Publication = () => {
@@ -44,7 +43,6 @@ export const Publication = () => {
   const {
     publication,
     createCommentHandler,
-    sendLikeHandler,
     deleteCommentHandler,
     editCommentHandler,
     editPublicationHandler,
@@ -52,14 +50,15 @@ export const Publication = () => {
 
   return (
     <>
-      <PublicationMain
-        publication={publication}
-        createComment={createCommentHandler}
-        sendLike={sendLikeHandler}
-        showModalOptionsPublication={showModalOptionsPublication}
-        showModalComment={showModalComment}
-        showModalLikes={showModalLikes}
-      />
+      {publication && (
+        <PublicationMain
+          publication={publication}
+          createComment={createCommentHandler}
+          showModalOptionsPublication={showModalOptionsPublication}
+          showModalComment={showModalComment}
+          showModalLikes={showModalLikes}
+        />
+      )}
       {isOpenModalOptions && (
         <ModalPublication
           isOpen={isOpenModalOptions}

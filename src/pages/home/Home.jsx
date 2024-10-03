@@ -4,8 +4,7 @@ import { Box, Spinner } from "@chakra-ui/react";
 import { useShowPublications } from "../../hooks/useShowPublications";
 
 export const Home = () => {
-  const { publications, setPublications, hasMore, refButton } =
-    useShowPublications();
+  const { publications, hasMore, refButton } = useShowPublications();
 
   return (
     <Box
@@ -17,12 +16,7 @@ export const Home = () => {
     >
       {publications /* ?.slice(0,0)? */
         .map((publication) => (
-          <CardPublication
-            key={publication._id}
-            publication={publication}
-            setPublications={setPublications}
-            publications={publications}
-          />
+          <CardPublication key={publication._id} publication={publication} />
         ))}
       {hasMore && (
         <Spinner

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import {
   Avatar,
@@ -13,48 +14,20 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faHeart } from "@fortawesome/free-solid-svg-icons";
-import {
-  faHeart as whiteHeart,
-  faComment,
-} from "@fortawesome/free-regular-svg-icons";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthProvider";
 import { Link } from "react-router-dom";
+import { ButtonsContainer } from "../ButtonsContainer";
 
 export const PublicationMain = ({
   publication,
   createComment,
-  sendLike,
   showModalOptionsPublication,
   showModalComment,
   showModalLikes,
 }) => {
   const { user } = useAuth();
   console.log(publication);
-
-  function buttonLike() {
-    return publication?.likes?.find((lk) => lk?._id === user._id) ? (
-      <Button
-        variant="ghost"
-        mt={"10"}
-        onClick={() => sendLike(publication._id, true)}
-      >
-        <FontAwesomeIcon
-          icon={faHeart}
-          style={{ color: "#ef1f1f" }}
-          size="xl"
-        />
-      </Button>
-    ) : (
-      <Button
-        variant="ghost"
-        mt={"10"}
-        onClick={() => sendLike(publication._id, false)}
-      >
-        <FontAwesomeIcon icon={whiteHeart} size="xl" />
-      </Button>
-    );
-  }
 
   return (
     <>
@@ -138,25 +111,11 @@ export const PublicationMain = ({
               gap={"8px"}
               marginBottom={"30px"}
             >
-              <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-                {buttonLike()}
-                <Button mt={"10"} variant="ghost">
-                  <FontAwesomeIcon icon={faComment} size="xl" />
-                </Button>
-              </Box>
+              <ButtonsContainer
+                publication={publication}
+                showModalLikes={showModalLikes}
+              />
 
-              <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
-                <Text onClick={showModalLikes} cursor={"pointer"}>
-                  {publication?.likes?.length > 0
-                    ? `${publication.likes.length} me gusta`
-                    : "Sé el primero en indicar que te gusta"}
-                </Text>
-                <Text>
-                  {publication?.comments?.length > 0
-                    ? `${publication.comments.length} comentarios`
-                    : "se el primero en comentar"}
-                </Text>
-              </Box>
               <Box
                 display={"flex"}
                 alignItems={"center"}

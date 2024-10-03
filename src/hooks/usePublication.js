@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { editPublication, getPublication } from "../api/publication";
 import { createComment, deletecomment, editComment } from "../api/comment";
 import { useAuth } from "../context/AuthProvider";
-import { debounce } from "../libs/debounce";
-import { likePublication } from "../api/likePublication";
 
 export const usePublication = (
   idpublication,
@@ -12,7 +10,7 @@ export const usePublication = (
   onCloseComment
 ) => {
   const { user } = useAuth();
-  const [publication, setPublication] = useState({});
+  const [publication, setPublication] = useState(null);
   useEffect(() => {
     getPublicationHandler(idpublication);
   }, []);
@@ -51,33 +49,6 @@ export const usePublication = (
     }
   };
 
-  // funcion para dar like o deslike
-  const sendLikeHandler = async (id, boolean) => {
-    console.log(id, boolean);
-    // eliminar like
-    if (boolean) {
-      setPublication((previous) => {
-        const data = previous.likes.filter((like) => like._id !== user._id);
-        handlerLike(id, { action: "eliminar" });
-        return { ...previous, likes: data };
-      });
-    }
-    // crear like
-    else {
-      setPublication((previous) => {
-        const data = { ...previous, likes: [...previous.likes, { ...user }] };
-        handlerLike(id, { action: "crear" });
-        return data;
-      });
-    }
-  };
-  async function petition(id, action) {
-    const response = await likePublication(id, action);
-    console.log(response);
-  }
-  const handlerLike = useCallback(debounce(petition, 500), []);
-
-  // funcion para eliminar comentario
   const deleteCommentHandler = async (idComment) => {
     console.log(idComment, publication._id);
     try {
@@ -138,7 +109,6 @@ export const usePublication = (
   return {
     publication,
     createCommentHandler,
-    sendLikeHandler,
     deleteCommentHandler,
     editCommentHandler,
     editPublicationHandler,

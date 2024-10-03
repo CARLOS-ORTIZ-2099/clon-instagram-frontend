@@ -66,7 +66,7 @@ export const useShowPublications = () => {
     }
   };
 
-  return { publications, setPublications, hasMore, refButton };
+  return { publications, hasMore, refButton };
 };
 /* la funcion de limpieza de react se ejcuta en 2 situaciones, cuando se
    desmonte el componente y cuando alguno de los elementos de su lista de
