@@ -1,23 +1,27 @@
 import { useState } from "react";
 
 export const useButtonsActive = () => {
-  const [buttonsActive, setButtonsActive] = useState({});
+  console.log("entroooo");
+
+  const [buttonsActive, setButtonsActive] = useState(null);
+  const [loadingBtn, setLoadingBtn] = useState(false);
 
   const handlerComment = ({ target }) => {
-    if (!buttonsActive[target.id] && target.value.trim().length > 0) {
-      setButtonsActive({ ...buttonsActive, [target.id]: target.id });
-    } else if (buttonsActive[target.id] && target.value.trim().length < 1) {
-      const copy = { ...buttonsActive };
-      delete copy[target.id];
-      setButtonsActive(copy);
+    if (!buttonsActive && target.value.trim().length > 0) {
+      setButtonsActive(target.id);
+    } else if (buttonsActive && target.value.trim().length < 1) {
+      setButtonsActive(null);
     }
   };
 
-  const cleanButtons = () => setButtonsActive({});
+  const cleanButtons = () => setButtonsActive(null);
+  const changeLoading = () => setLoadingBtn((previous) => !previous);
 
   return {
     handlerComment,
     buttonsActive,
     cleanButtons,
+    loadingBtn,
+    changeLoading,
   };
 };

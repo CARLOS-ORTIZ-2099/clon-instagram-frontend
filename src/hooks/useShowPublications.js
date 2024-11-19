@@ -45,7 +45,10 @@ export const useShowPublications = () => {
   }
 
   const getPublicationsHandler = async () => {
-    setPending(true); // apenas ejecutamos la funcion pasamos a estado pendiente
+    // apenas ejecutamos la funcion pasamos a estado pendiente
+    // esto lo hacemos por que mientras estamos en modo pendiente
+    // haciendo una solicitud no podemos hacer otra auque halla una interseccion
+    setPending(true);
     //console.log("entro");
     try {
       const response = await getPublications(publications.length);

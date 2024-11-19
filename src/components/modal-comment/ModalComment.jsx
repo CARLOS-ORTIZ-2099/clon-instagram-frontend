@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../../context/AuthProvider";
 import { useState } from "react";
+import { useButtonsActive } from "../../hooks/useButtonsActive";
 
 export const ModalComment = ({
   isOpenModalComment,
@@ -22,7 +23,7 @@ export const ModalComment = ({
 }) => {
   const { user } = useAuth();
   const [isEditComment, setIsEditComment] = useState(false);
-
+  const { loadingBtn, changeLoading } = useButtonsActive();
   return (
     <>
       <Modal
@@ -36,18 +37,22 @@ export const ModalComment = ({
           <ModalHeader textAlign={"center"} borderBottom={"solid black 1px"}>
             Comment
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton isDisabled={loadingBtn} />
           <ModalBody pb={6}>
             {!isEditComment &&
               (user._id == commentSelect?.ownerComment?._id ? (
                 <Box display={"flex"} justifyContent={"space-around"}>
                   <Button
-                    onClick={() => deleteComent(commentSelect?._id)}
+                    isLoading={loadingBtn}
+                    onClick={() =>
+                      deleteComent(commentSelect?._id, changeLoading)
+                    }
                     colorScheme="red"
                   >
                     eliminar
                   </Button>
                   <Button
+                    isLoading={loadingBtn}
                     onClick={() => setIsEditComment(true)}
                     colorScheme="blue"
                   >
@@ -62,7 +67,12 @@ export const ModalComment = ({
               <Box
                 as="form"
                 onSubmit={(e) =>
-                  editComment(e, commentSelect._id, e.target.content.value)
+                  editComment(
+                    e,
+                    commentSelect._id,
+                    e.target.content.value,
+                    changeLoading
+                  )
                 }
               >
                 <Textarea
@@ -70,7 +80,12 @@ export const ModalComment = ({
                   placeholder="escribe un comentario"
                   defaultValue={commentSelect.content}
                 />
-                <Button marginLeft={"40%"} marginTop={2} type="submit">
+                <Button
+                  isLoading={loadingBtn}
+                  marginLeft={"40%"}
+                  marginTop={2}
+                  type="submit"
+                >
                   editar
                 </Button>
               </Box>

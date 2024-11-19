@@ -13,37 +13,63 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { createPublication } from "../../api/publication";
 import { useUploadPhoto } from "../../hooks/useUploadPhoto";
 import { useState } from "react";
+import { processFormdata } from "../../libs/processFormdata";
 
 export const ModalCreatePublication = ({ isOpenCreate, onCloseCreate }) => {
   const { image, uploadPhoto } = useUploadPhoto();
   const [loading, setLoading] = useState(false);
+  // este  hook de chakra UI retorna una funcion
+  const toast = useToast();
 
   const sendData = async (e) => {
     e.preventDefault();
     if (!image.file) {
-      return alert("la imagen es obligatoria");
+      return toast({
+        title: "Falta Imagen",
+        description: "la imagen es obligatoria",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
-    const formData = new FormData();
-    formData.append("content", e.target.content.value);
-    formData.append("file", image.file);
-    //console.log(Object.fromEntries(formData));
-    createPublicationHandler(formData);
+    // en este punto la imagen si existira
+    // antes de hacer solicitud al servidor verificar que la imagen sea del tipo y tamaño correcto
+    const formData = processFormdata(image, toast, {
+      content: e.target.content.value,
+    });
+    if (formData) {
+      createPublicationHandler(formData);
+    }
   };
   const createPublicationHandler = async (formData) => {
     setLoading(true);
     try {
       const response = await createPublication(formData);
-      console.log(response);
-      alert("se creo correctamente");
+      //console.log(response);
+      toast({
+        title: "publicacion creada",
+        description: "la publicacion se creo correctamente",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
       onCloseCreate();
     } catch (error) {
       console.log(error);
+      toast({
+        title: "error",
+        description: error.response.data.image,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }

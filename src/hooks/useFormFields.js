@@ -10,5 +10,9 @@ export const useFormFields = (data = {}) => {
     }));
   };
 
-  return { fields, setFields, handlerChange };
+  const cleanFields = (initial) => {
+    setFields(initial);
+  };
+
+  return { fields, setFields, handlerChange, cleanFields };
 };

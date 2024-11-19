@@ -31,24 +31,34 @@ import { useState } from "react";
 import { useLikes } from "../../hooks/useLikes.js";
 
 export const CardPublication = ({ publication }) => {
+  console.log("hi");
   const { user } = useAuth();
-  const { cleanButtons, handlerComment, buttonsActive } = useButtonsActive();
+  const {
+    cleanButtons,
+    handlerComment,
+    buttonsActive,
+    loadingBtn,
+    changeLoading,
+  } = useButtonsActive();
 
-  // recalcar que aunque el estado de publicaciones cambie cuando se haga scroll y la publicacion se vuelva a renderizar nuestro estado de likes no se vuelve a inicializar con ese mismo valor, ya que cuando usamos una prop para inicializar un estado, aunque el estado cambie la inicializacion solo ocurre una vez
+  // recalcar que aunque el estado de publicaciones cambie cuando se haga scroll y la publicacion se vuelva a renderizar nuestro estado de likes y comentarios no se vuelve a reinicializar con ese mismo valor, ya que cuando usamos una prop para inicializar un estado, aunque el estado cambie la inicializacion solo ocurre una vez
   const { likes, sendLike } = useLikes(publication);
   const [comments, setComments] = useState(publication.comments);
 
   const createCommentHandler = async (e, id) => {
     e.preventDefault();
+    changeLoading();
     try {
       const comment = await createComment(id, {
         content: e.target.content.value,
       });
+      changeLoading();
       cleanButtons();
       setComments([...comments, comment.data]);
       e.target.reset();
     } catch (error) {
       console.log(error);
+      changeLoading();
     }
   };
   function buttonLike() {
@@ -68,7 +78,7 @@ export const CardPublication = ({ publication }) => {
   }
 
   return (
-    <Card maxW="md">
+    <Card maxW="md" mb={5}>
       <CardHeader>
         <Flex spacing="4">
           <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
@@ -95,6 +105,7 @@ export const CardPublication = ({ publication }) => {
       <Image
         objectFit="cover"
         height={"400px"}
+        width={"md"}
         src={publication.file.secure_url}
         alt="image-post"
       />
@@ -141,8 +152,13 @@ export const CardPublication = ({ publication }) => {
               onChange={handlerComment}
               name="content"
             />
-            {buttonsActive[publication._id] && (
-              <Button type="submit" color={"blue"} bg={"none"}>
+            {buttonsActive && (
+              <Button
+                isLoading={loadingBtn}
+                type="submit"
+                color={"blue"}
+                bg={"none"}
+              >
                 publicar
               </Button>
             )}

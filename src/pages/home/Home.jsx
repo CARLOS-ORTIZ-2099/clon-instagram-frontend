@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { CardPublication } from "../../components/card-publication/CardPublication";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, Text } from "@chakra-ui/react";
 import { useShowPublications } from "../../hooks/useShowPublications";
 
 export const Home = () => {
@@ -26,7 +26,13 @@ export const Home = () => {
           emptyColor="gray.200"
           color="blue.500"
           size="xl"
+          mb={5}
         />
+      )}
+      {!hasMore && publications.length === 0 && (
+        <Text fontSize={"xl"} color={"#4cb5f9"}>
+          no hay nada para mostrar
+        </Text>
       )}
     </Box>
   );

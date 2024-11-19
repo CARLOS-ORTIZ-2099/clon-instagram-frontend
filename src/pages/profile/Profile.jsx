@@ -9,7 +9,8 @@ import { ModalFollowers } from "../../components/modal-followers.jsx/ModalFollow
 import { ProfileCard } from "../../components/profile-card/ProfileCard";
 import { ImagesContainer } from "../../components/grid-images-container/ImagesContainer";
 import { PublicationImage } from "../../components/publication-image/PublicationImage";
-import { Loading } from "../../components/Loading";
+import { UserNotFound } from "../../components/user-not-found/UserNotFound";
+import { Loading } from "../../components/loading/Loading";
 
 export const Profile = () => {
   const { username } = useParams();
@@ -21,15 +22,20 @@ export const Profile = () => {
   });
 
   const profilehandler = async () => {
-    const { data } = await profileUser(username);
-    console.log(data);
-    setInfoUser({
-      ...infoUser,
-      user: data.user,
-      publications: data.publications,
-      followeds: data.followeds,
-      followers: data.followers,
-    });
+    try {
+      const { data } = await profileUser(username);
+      console.log(data);
+      setInfoUser({
+        ...infoUser,
+        user: data.user,
+        publications: data.publications,
+        followeds: data.followeds,
+        followers: data.followers,
+      });
+    } catch (error) {
+      console.log(error);
+      setInfoUser({ ...infoUser, user: error.response.data });
+    }
   };
 
   useEffect(() => {
@@ -75,6 +81,8 @@ export const Profile = () => {
 
   if (!infoUser.user) return <Loading />;
 
+  if (infoUser.user?.message)
+    return <UserNotFound message={infoUser.user.message} />;
   return (
     <Box>
       <ProfileCard

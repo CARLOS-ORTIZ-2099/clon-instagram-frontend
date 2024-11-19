@@ -4,7 +4,7 @@ import { Login } from "./pages/login/Login";
 import { Home } from "./pages/home/Home";
 import { ProtectedRoutes } from "./components/protected-routes/ProtectedRoutes";
 import { Profile } from "./pages/profile/Profile";
-import { NotFound } from "./pages/NotFound";
+import { NotFound } from "./pages/not-found/NotFound";
 import { PublicRoutes } from "./components/public-routes/PublicRoutes";
 import { AuthProvider } from "./context/AuthProvider";
 import { Publication } from "./pages/publication/Publication";
@@ -27,12 +27,12 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path="/home" element={<Home />} />
 
-              <Route path="/profile/:username" element={<Profile />} />
-
               <Route path="/p/:idpublication" element={<Publication />} />
-
               <Route path="/explore" element={<Explore />} />
+
+              <Route path="/profile/:username" element={<Profile />} />
             </Route>
+            {/* este componente lo pongo por fuear ya que no quiero que coexista con el sidebar, aun asi es una ruta protegida y se valida en el mismo componente */}
             <Route path="/edit-profile/:id" element={<EditProfile />} />
 
             <Route path="*" element={<NotFound />} />

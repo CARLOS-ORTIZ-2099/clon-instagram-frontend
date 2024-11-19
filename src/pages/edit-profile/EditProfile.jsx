@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -9,14 +8,14 @@ import {
   Input,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useAuth } from "../../context/AuthProvider";
 import { useFormFields } from "../../hooks/useFormFields";
 import { useUploadPhoto } from "../../hooks/useUploadPhoto";
-import { useState } from "react";
-import { editprofile } from "../../api/auth";
-import { UploadAvatar } from "../../components/UploadAvatar";
+import { UploadAvatar } from "../../components/upload-avatar/UploadAvatar";
+import { processFormdata } from "../../libs/processFormdata";
 
 const initial = {
   email: "",
@@ -27,18 +26,25 @@ const initial = {
 };
 
 export const EditProfile = () => {
-  const { isAunthenticated, user, setUser } = useAuth();
+  const {
+    isAunthenticated,
+    user,
+    editProfile,
+    errorsRegister,
+    loadingRegister,
+  } = useAuth();
   const { fields, handlerChange, setFields } = useFormFields(initial);
   const { image, uploadPhoto } = useUploadPhoto();
   const { id } = useParams();
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate("/");
+  const navigate = useNavigate();
+  const toast = useToast();
+
   useEffect(() => {
     if (!isAunthenticated || !user) {
       navigate("/");
       return;
     }
-    if (id && isAunthenticated) {
+    if (isAunthenticated && user && id) {
       setFields({
         email: user.email,
         fullname: user.fullname,
@@ -51,22 +57,11 @@ export const EditProfile = () => {
 
   const sendData = async (e) => {
     e.preventDefault();
-    const newFormData = new FormData();
-    image.file && newFormData.append("file", image.file);
-    for (let key in fields) {
-      newFormData.append(key, fields[key]);
-    }
-    try {
-      setLoading(true);
-      const { data } = await editprofile(newFormData, id);
-      console.log(data);
-      alert("editado correctamente");
-      setLoading(false);
-      setUser(data);
-      navigate(`/profile/${data.username}`);
-    } catch (error) {
-      console.log(error);
-    }
+    const newFormData = processFormdata(image, toast, fields);
+    if (!newFormData) return;
+    const response = await editProfile(newFormData, id);
+    console.log(response);
+    if (response) navigate(`/profile/${response}`);
   };
 
   return (
@@ -85,6 +80,9 @@ export const EditProfile = () => {
           <FormControl>
             <UploadAvatar uploadPhoto={uploadPhoto} image={image} user={user} />
           </FormControl>
+          {errorsRegister?.image && (
+            <Text color={"tomato"}>{errorsRegister.image}</Text>
+          )}
 
           <FormLabel>Email address</FormLabel>
           <Input
@@ -95,6 +93,9 @@ export const EditProfile = () => {
             value={fields.email}
             onChange={handlerChange}
           />
+          {errorsRegister?.email && (
+            <Text color={"tomato"}>{errorsRegister.email}</Text>
+          )}
 
           <FormLabel>password</FormLabel>
           <Input
@@ -105,6 +106,9 @@ export const EditProfile = () => {
             value={fields.password}
             onChange={handlerChange}
           />
+          {errorsRegister?.password && (
+            <Text color={"tomato"}>{errorsRegister.password}</Text>
+          )}
 
           <FormLabel>username</FormLabel>
           <Input
@@ -116,6 +120,10 @@ export const EditProfile = () => {
             onChange={handlerChange}
           />
 
+          {errorsRegister?.username && (
+            <Text color={"tomato"}>{errorsRegister.username}</Text>
+          )}
+
           <FormLabel>fullname</FormLabel>
           <Input
             name="fullname"
@@ -125,6 +133,10 @@ export const EditProfile = () => {
             value={fields.fullname}
             onChange={handlerChange}
           />
+          {errorsRegister?.fullname && (
+            <Text color={"tomato"}>{errorsRegister.fullname}</Text>
+          )}
+
           <>
             <FormLabel>bio</FormLabel>
             <Textarea
@@ -146,7 +158,7 @@ export const EditProfile = () => {
             fontWeight={"bolder"}
             color={"aliceblue"}
             lineHeight={"4px"}
-            isLoading={loading}
+            isLoading={loadingRegister}
           >
             editar
           </Button>

@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAuth } from "../../context/AuthProvider";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useFormFields } from "../../hooks/useFormFields";
-import { useEffect } from "react";
 import img from "../../assets/images/auth.png";
 import imgGoogle from "../../assets/images/googlePlay.png";
 import imgMicrosoft from "../../assets/images/microsoft.png";
@@ -21,13 +20,7 @@ import {
 
 export const Login = () => {
   const { fields, handlerChange } = useFormFields();
-  const { loginHandler, isAunthenticated, errors, setErrors } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAunthenticated) navigate("/home");
-    setErrors(null);
-  }, [isAunthenticated]);
+  const { loginHandler, errorsLogin, loadingLogin } = useAuth();
 
   const sendData = (e) => {
     e.preventDefault();
@@ -46,8 +39,8 @@ export const Login = () => {
       <Box
         display={"flex"}
         gap={"2rem"}
-        width={{ base: "100%", md: "auto" }}
-        height={{ base: "100vh", md: "auto" }}
+        width={{ base: "100%", sm: "auto" }}
+        height={{ base: "100vh", sm: "auto" }}
       >
         <Box
           flex={"1 1 0"}
@@ -92,6 +85,7 @@ export const Login = () => {
                 placeholder="password"
               />
               <Button
+                isLoading={loadingLogin}
                 h={"35px"}
                 borderRadius={"7px"}
                 bg={"#4cb5f9"}
@@ -113,7 +107,9 @@ export const Login = () => {
             <Text fontSize={"small"} fontWeight={"bold"}>
               iniciar sesion con facebook
             </Text>
-            {errors && <Text color={"tomato"}>{errors?.message}</Text>}
+            {errorsLogin && (
+              <Text color={"tomato"}>{errorsLogin?.message}</Text>
+            )}
           </Box>
 
           <Center

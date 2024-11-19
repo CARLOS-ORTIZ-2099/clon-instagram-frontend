@@ -25,19 +25,19 @@ export const usePublication = (
     }
   };
   // funcion para crear comentario
-  const createCommentHandler = async (e, comment) => {
+  // change y clean son funciones de un custom hook que se pasan como parametro a esta funcion estas se encargan de cambiar el estado
+  // de loading a su valor opuesto y clean se encarga de resetear el estado de visibilidad
+  // del boton de publicar
+  const createCommentHandler = async (e, comment, change, clean) => {
     e.preventDefault();
-    if (comment.trim().length < 1) {
-      alert("inserta un comentario");
-      return;
-    }
+    change(); // aqui
     try {
       const response = await createComment(idpublication, {
         content: comment,
         username: user.username,
       });
-      //console.log(response);
-      //console.log(publication);
+      change();
+      clean();
       response.data.ownerComment.avatar = user.avatar;
       setPublication((previous) => ({
         ...previous,
@@ -45,12 +45,14 @@ export const usePublication = (
       }));
       e.target.reset();
     } catch (error) {
+      change();
       console.log(error);
     }
   };
 
-  const deleteCommentHandler = async (idComment) => {
+  const deleteCommentHandler = async (idComment, change) => {
     console.log(idComment, publication._id);
+    change();
     try {
       const response = await deletecomment(publication._id, idComment);
       console.log(response);
@@ -58,16 +60,19 @@ export const usePublication = (
       const updateComments = publication.comments.filter(
         (comment) => comment._id != response.data
       );
+      change();
       setPublication({ ...publication, comments: updateComments });
 
       onCloseComment();
     } catch (error) {
+      change();
       console.log(error);
     }
   };
 
-  const editCommentHandler = async (e, idComment, data) => {
+  const editCommentHandler = async (e, idComment, data, change) => {
     e.preventDefault();
+    change();
     try {
       // recibe el id de la publicacion, el id del comentario a editar y el valor a editar
       const response = await editComment(publication._id, idComment, {
@@ -80,19 +85,23 @@ export const usePublication = (
           ? { ...comment, content: response.data.comment.content }
           : comment
       );
+      change();
       setPublication({ ...publication, comments: editComments });
       onCloseComment();
     } catch (error) {
+      change();
       console.log(error);
     }
   };
 
-  const editPublicationHandler = async (id, fields) => {
+  const editPublicationHandler = async (id, fields, change) => {
+    change();
     try {
       const {
         data: { body },
       } = await editPublication(id, fields);
       console.log(body);
+      change();
       // modificar la publicacion que se edito
       setPublication((pr) => ({
         ...pr,
@@ -102,7 +111,10 @@ export const usePublication = (
       alert("se edito correctamente");
       onClosePublication();
     } catch (error) {
+      change();
       console.log(error);
+      // aqui si se detecta un error como por ejemplo de que la imagen sea mas de 1mb
+      // sacar un mensaje que indique dicho error
     }
   };
 

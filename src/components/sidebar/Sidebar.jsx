@@ -91,8 +91,7 @@ export const Sidebar = ({ onOpen, onOpenCreate }) => {
           <Link to={`/profile/${user.username}`}>
             <FontAwesomeIcon icon={faUser} size="xl" />
             <Box as="span" display={{ base: "none", lg: "inline" }} ml={"10px"}>
-              {" "}
-              perfil
+              {user.username}
             </Box>
           </Link>
         </Box>

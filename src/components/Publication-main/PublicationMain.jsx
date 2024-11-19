@@ -17,8 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthProvider";
 import { Link } from "react-router-dom";
-import { ButtonsContainer } from "../ButtonsContainer";
-
+import { useButtonsActive } from "../../hooks/useButtonsActive";
+import { ButtonsContainer } from "../buttons-container/ButtonsContainer";
 export const PublicationMain = ({
   publication,
   createComment,
@@ -26,8 +26,15 @@ export const PublicationMain = ({
   showModalComment,
   showModalLikes,
 }) => {
+  const {
+    handlerComment,
+    buttonsActive,
+    loadingBtn,
+    cleanButtons,
+    changeLoading,
+  } = useButtonsActive();
   const { user } = useAuth();
-  console.log(publication);
+  //console.log(publication);
 
   return (
     <>
@@ -49,6 +56,7 @@ export const PublicationMain = ({
             maxW={{ base: "100%", md: "60%" }}
             src={publication?.file?.secure_url}
             alt="Caffe Latte"
+            height={{ lg: "70vh" }}
           />
           <Stack
             /* border={'solid green 2px'} */ maxHeight={"70vh"}
@@ -121,17 +129,32 @@ export const PublicationMain = ({
                 alignItems={"center"}
                 justifyContent={"space-around"}
                 as="form"
-                onSubmit={(e) => createComment(e, e.target.content.value)}
+                onSubmit={(e) =>
+                  createComment(
+                    e,
+                    e.target.content.value,
+                    changeLoading,
+                    cleanButtons
+                  )
+                }
               >
                 <Input
-                  w={"auto"}
                   variant="flushed"
-                  placeholder="agrega un comentario"
+                  id={publication._id}
+                  placeholder="agregar un comentario"
+                  onChange={handlerComment}
                   name="content"
-                ></Input>
-                <Button size={"sm"} type="submit">
-                  publicar
-                </Button>
+                />
+                {buttonsActive && (
+                  <Button
+                    isLoading={loadingBtn}
+                    type="submit"
+                    color={"blue"}
+                    bg={"none"}
+                  >
+                    publicar
+                  </Button>
+                )}
               </Box>
             </CardFooter>
           </Stack>

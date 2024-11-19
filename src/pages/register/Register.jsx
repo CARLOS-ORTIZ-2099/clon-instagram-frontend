@@ -16,19 +16,17 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+
+const initial = { email: "", username: "", password: "", fullname: "" };
 
 export const Register = () => {
-  const { fields, handlerChange } = useFormFields();
-  const { registerHandler, errors, setErrors } = useAuth();
+  const { fields, handlerChange, cleanFields } = useFormFields(initial);
+  const { registerHandler, errorsRegister, loadingRegister } = useAuth();
 
-  useEffect(() => {
-    setErrors(null);
-  }, []);
-
-  const sendData = (e) => {
+  const sendData = async (e) => {
     e.preventDefault();
-    registerHandler(fields);
+    const res = await registerHandler(fields);
+    if (res) cleanFields(initial);
   };
 
   return (
@@ -77,42 +75,48 @@ export const Register = () => {
               noValidate
             >
               <Input
+                value={fields.fullname}
                 h={"38px"}
                 onChange={handlerChange}
                 name="fullname"
                 type="text"
                 placeholder="fullname"
               />
-              {errors?.fullname && (
-                <Text color={"tomato"}>{errors.fullname}</Text>
+              {errorsRegister?.fullname && (
+                <Text color={"tomato"}>{errorsRegister.fullname}</Text>
               )}
               <Input
+                value={fields.username}
                 h={"38px"}
                 onChange={handlerChange}
                 name="username"
                 type="text"
                 placeholder="username"
               />
-              {errors?.username && (
-                <Text color={"tomato"}>{errors.username}</Text>
+              {errorsRegister?.username && (
+                <Text color={"tomato"}>{errorsRegister.username}</Text>
               )}
               <Input
+                value={fields.email}
                 h={"38px"}
                 onChange={handlerChange}
                 name="email"
                 type="email"
                 placeholder="email"
               />
-              {errors?.email && <Text color={"tomato"}>{errors.email}</Text>}
+              {errorsRegister?.email && (
+                <Text color={"tomato"}>{errorsRegister.email}</Text>
+              )}
               <Input
+                value={fields.password}
                 h={"38px"}
                 onChange={handlerChange}
                 name="password"
                 type="text"
                 placeholder="password"
               />
-              {errors?.password && (
-                <Text color={"tomato"}>{errors.password}</Text>
+              {errorsRegister?.password && (
+                <Text color={"tomato"}>{errorsRegister.password}</Text>
               )}
               <Box>
                 <Text fontSize={"xs"}>
@@ -132,6 +136,7 @@ export const Register = () => {
                 </Text>
               </Box>
               <Button
+                isLoading={loadingRegister}
                 type="submit"
                 h={"35px"}
                 borderRadius={"7px"}

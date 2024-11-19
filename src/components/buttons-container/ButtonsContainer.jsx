@@ -3,12 +3,12 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth } from "../../context/AuthProvider";
 import {
   faHeart as whiteHeart,
   faComment,
 } from "@fortawesome/free-regular-svg-icons";
-import { useLikes } from "../hooks/useLikes";
+import { useLikes } from "../../hooks/useLikes";
 
 export const ButtonsContainer = ({ publication, showModalLikes }) => {
   const { likes, sendLike } = useLikes(publication);
@@ -48,15 +48,9 @@ export const ButtonsContainer = ({ publication, showModalLikes }) => {
 
       <Box display={"flex"} justifyContent={"center"} gap={"10px"}>
         <Text onClick={showModalLikes} cursor={"pointer"}>
-          {likes?.length > 0
-            ? `${likes?.length} me gusta`
-            : "Sé el primero en indicar que te gusta"}
+          {likes?.length + " " + "me gusta"}
         </Text>
-        <Text>
-          {publication?.comments?.length > 0
-            ? `${publication.comments.length} comentarios`
-            : "se el primero en comentar"}
-        </Text>
+        <Text>{publication?.comments?.length + " " + "comentarios"}</Text>
       </Box>
     </>
   );

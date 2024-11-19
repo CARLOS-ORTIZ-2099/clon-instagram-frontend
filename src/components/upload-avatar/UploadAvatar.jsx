@@ -17,7 +17,7 @@ export const UploadAvatar = ({ uploadPhoto, user, image }) => {
             size="2xl"
             name={`${user.username} `}
             src={image?.result || `${user?.avatar?.secure_url}`}
-          />{" "}
+          />
         </Box>
         upload
       </FormLabel>

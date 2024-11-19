@@ -6,9 +6,10 @@ import { ModalSearch } from "../modal-search/ModalSearch";
 import { ModalCreatePublication } from "../modal-create-publication/ModalCreatePublication";
 import { Grid, useDisclosure } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { Loading } from "../Loading";
+import { Loading } from "../loading/Loading";
 
 export const ProtectedRoutes = () => {
+  console.log("ruta protegida");
   const { user, loading, isAunthenticated } = useAuth();
   // hook de react router dom que devuelve un objeto con la informacion de la url actual
   const location = useLocation();

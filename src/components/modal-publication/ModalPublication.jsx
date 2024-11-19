@@ -13,6 +13,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuth } from "../../context/AuthProvider";
 import { useState } from "react";
@@ -21,6 +22,8 @@ import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { deletePublication } from "../../api/publication";
 import { useNavigate } from "react-router-dom";
 import { useUploadPhoto } from "../../hooks/useUploadPhoto";
+import { useButtonsActive } from "../../hooks/useButtonsActive";
+import { processFormdata } from "../../libs/processFormdata";
 
 export const ModalPublication = ({
   isOpen,
@@ -31,24 +34,30 @@ export const ModalPublication = ({
   const { user } = useAuth();
   const [isEditPublication, setIsEditPublication] = useState(false);
   const { image, uploadPhoto } = useUploadPhoto();
-
+  const { loadingBtn, changeLoading } = useButtonsActive();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const setEditPublication = (e) => {
     e.preventDefault();
-    const newFormaData = new FormData();
-    newFormaData.append("content", e.target.content.value);
-    image.file && newFormaData.append("file", image.file);
-    console.log(Object.fromEntries(newFormaData));
-    editPublicationHandler(publication._id, newFormaData);
+    const newFormaData = processFormdata(image, toast, {
+      content: e.target.content.value,
+    });
+
+    if (newFormaData) {
+      editPublicationHandler(publication._id, newFormaData, changeLoading);
+    }
   };
 
   const deletePublicationHandler = async (id) => {
+    changeLoading();
     try {
       const data = await deletePublication(id);
       console.log(data);
+      changeLoading();
       navigate("/home");
     } catch (error) {
+      changeLoading();
       console.log(error);
     }
   };
@@ -66,7 +75,7 @@ export const ModalPublication = ({
           <ModalHeader textAlign={"center"} borderBottom={"solid black 1px"}>
             Publication
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton isDisabled={loadingBtn} />
           <ModalBody pb={6}>
             <Box>
               {!isEditPublication &&
@@ -75,10 +84,12 @@ export const ModalPublication = ({
                     <Button
                       onClick={() => deletePublicationHandler(publication._id)}
                       colorScheme="red"
+                      isLoading={loadingBtn}
                     >
                       eliminar
                     </Button>
                     <Button
+                      isLoading={loadingBtn}
                       onClick={() => setIsEditPublication(true)}
                       colorScheme="blue"
                     >
@@ -117,7 +128,12 @@ export const ModalPublication = ({
                     placeholder="escribe una descripcion..."
                     defaultValue={publication.content}
                   />
-                  <Button marginLeft={"40%"} marginTop={2} type="submit">
+                  <Button
+                    isLoading={loadingBtn}
+                    marginLeft={"40%"}
+                    marginTop={2}
+                    type="submit"
+                  >
                     editar
                   </Button>
                 </Box>
